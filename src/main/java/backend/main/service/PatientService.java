@@ -1,0 +1,58 @@
+package backend.main.service;
+
+import backend.main.model.Patient;
+import backend.main.repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class PatientService {
+    private final PatientRepository patientRepository;
+
+    @Autowired
+    public PatientService(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
+    }
+
+    public Patient getPatientById(String pssn) {
+        return patientRepository.findById(pssn)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + pssn));
+    }
+
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll();
+    }
+
+    public Patient addPatient(Patient patient) {
+        // Kiểm tra trùng hoàn toàn: tất cả các trường identity
+        List<Patient> candidates = patientRepository.findByIdentity(patient.getName(), patient.getBloodType(), patient.getAge(), patient.getGender());
+        if (!candidates.isEmpty()) {
+            throw new RuntimeException("Bệnh nhân đã tồn tại với thông tin này!");
+        }
+        int result = patientRepository.save(patient);
+        if (result > 0 && patient.getPssn() != null) {
+            return getPatientById(patient.getPssn());
+        } else {
+            throw new RuntimeException("Failed to save patient or PID not assigned.");
+        }
+    }
+
+    public Patient updatePatient(String pssn, Patient patient) {
+        patient.setPssn(pssn);
+        int result = patientRepository.update(patient);
+        if (result > 0) {
+            return getPatientById(pssn);
+        } else {
+            throw new RuntimeException("Failed to update patient with id: " + pssn);
+        }
+    }
+
+    public void deletePatient(String pssn) {
+        int result = patientRepository.deleteById(pssn);
+        if (result == 0) {
+            throw new RuntimeException("Failed to delete patient with id: " + pssn);
+        }
+    }
+}

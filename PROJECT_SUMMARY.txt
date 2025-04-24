@@ -1,0 +1,148 @@
+# PDM Project Summary
+
+## 1. Backend (Spring Boot)
+### 1.1 Cấu trúc Project
+```
+src/main/java/backend/main/
+├── BloodDonationApplication.java
+├── config/
+├── controller/
+├── exception/
+├── model/
+├── repository/
+├── service/
+└── swingtool/
+```
+
+### 1.2 Model (Entities)
+- **Donor**: Thông tin người hiến máu
+  - donorId, name, gender, age, bloodType, weight, lastDonationDate, healthStatus, isEligible, registrationDate, phone
+- **Patient**: Thông tin bệnh nhân
+  - pid, name, bloodType, age, gender, medicalHistory, registrationDate, lastUpdated
+- **Doctor**: Thông tin bác sĩ
+  - did, name, licenseNumber, specialization, email, pid (nullable)
+- **BloodBank**: Thông tin ngân hàng máu
+  - bid, name, contactEmail, contactPhone, address, city, country, postalCode, lastInventoryDate
+- **BloodStock**: Kho máu
+  - stockId, bloodType, quantity, status, expirationDate, storageLocation
+- **BloodBankStock**: Liên kết giữa BloodBank và BloodStock
+  - bid, stockId, assignmentDate
+- **DonateTimes**: Lượt hiến máu
+  - donationId, bid, donorId, donationDate, quantity, notes
+- **RequestTimes**: Lượt yêu cầu máu
+  - requestId, did, bid, patientId, requestDate, bloodType, quantity, urgency, status
+- **DonorPhone**: Số điện thoại người hiến
+  - donorId, phone, isPrimary
+- **PatientPhone**: Số điện thoại bệnh nhân
+  - pid, phone, isPrimary
+
+### 1.3 API Endpoints
+- **Donors**: `/donors`
+- **Patients**: `/patients`
+- **Doctors**: `/doctors`
+- **BloodBanks**: `/bloodBanks`
+- **BloodStocks**: `/bloodStocks`
+- **BloodBankStocks**: `/bloodBankStocks`
+- **DonateTimes**: `/donateTimes`
+- **RequestTimes**: `/requestTimes`
+- **DonorPhones**: `/donorPhones`
+- **PatientPhones**: `/patientPhones`
+
+### 1.4 Service Layer
+- Sử dụng Spring Service pattern
+- Tách biệt logic kinh doanh
+- Xử lý validation, business rules
+- Tích hợp với repository layer
+
+## 2. Frontend (React + Vite)
+### 2.1 Cấu trúc Project
+```
+src/frontend/
+├── App.jsx
+├── main.jsx
+├── components/
+├── pages/
+├── routes/
+├── services/
+└── assets/
+```
+
+### 2.2 Components
+- **Navbar**: Header với logo, menu, avatar
+- **Sidebar**: Menu điều hướng bên trái
+- **Table**: Hiển thị danh sách dữ liệu
+- **Modal**: Form thêm/sửa
+- **Form**: Các form nhập liệu
+- **SearchBar**: Tìm kiếm dữ liệu
+- **Toast**: Thông báo
+- **Spinner**: Loading
+
+### 2.3 Pages
+- **Dashboard**: Tổng quan hệ thống
+- **Donors**: Quản lý người hiến
+- **Patients**: Quản lý bệnh nhân
+- **Doctors**: Quản lý bác sĩ
+- **BloodBanks**: Quản lý ngân hàng máu
+- **BloodStocks**: Quản lý kho máu
+- **DonateTimes**: Quản lý lượt hiến
+- **RequestTimes**: Quản lý yêu cầu máu
+
+### 2.4 Features
+- **CRUD**: Thêm, sửa, xóa, xem danh sách
+- **Search**: Tìm kiếm dữ liệu
+- **Filter**: Lọc dữ liệu
+- **Validation**: Kiểm tra dữ liệu
+- **Responsive**: Hỗ trợ mobile/desktop
+- **UI/UX**: Giao diện đẹp, dễ sử dụng
+
+## 3. Công Cụ & Thư Viện
+### 3.1 Backend
+- **Spring Boot**: Framework
+- **Lombok**: Giảm boilerplate code
+- **Spring JDBC**: ORM
+- **Spring Web**: REST API
+- **Spring Security**: Bảo mật
+
+### 3.2 Frontend
+- **React**: Framework
+- **Vite**: Build tool
+- **React Router**: Routing
+- **Axios**: HTTP client
+- **Tailwind CSS**: CSS framework
+- **React Icons**: Icon library
+
+## 4. Lưu Ý & Quy Ước
+- Sử dụng Lombok cho các entity
+- REST API tuân theo convention
+- Frontend responsive design
+- Tách biệt concerns rõ ràng
+- Sử dụng environment variables
+- Validation ở cả frontend và backend
+
+## 5. TODO / Đề Xuất
+1. **Backend**:
+   - Thêm phân trang cho API
+   - Thêm validation chi tiết
+   - Tối ưu query database
+   - Thêm cache
+   - Thêm logging
+
+2. **Frontend**:
+   - Thêm loading states
+   - Thêm error handling
+   - Tối ưu performance
+   - Thêm unit tests
+   - Thêm e2e tests
+
+3. **Security**:
+   - Thêm JWT authentication
+   - Thêm rate limiting
+   - Thêm CORS configuration
+   - Thêm input sanitization
+
+4. **Monitoring**:
+   - Thêm logging
+   - Thêm metrics
+   - Thêm error tracking
+   - Thêm performance monitoring
+

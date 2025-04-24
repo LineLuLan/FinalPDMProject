@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "c9d8e2f2-7e5c-4a5a-8e8a-entity-collection",
+    "name": "Entity API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Patient",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pssn\": \"P001\",\n  \"userId\": 1,\n  \"name\": \"Nguyen Van A\",\n  \"bloodType\": \"A+\",\n  \"age\": 25,\n  \"gender\": \"Male\",\n  \"phone\": \"0909123456\",\n  \"email\": \"patient1@example.com\",\n  \"assignedDoctorId\": \"D001\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/patients",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","patients"]
+        }
+      }
+    },
+    {
+      "name": "Create Doctor",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dssn\": \"D001\",\n  \"userId\": 2,\n  \"dname\": \"Dr. Tran B\",\n  \"specialization\": \"Cardiology\",\n  \"email\": \"doctor1@example.com\",\n  \"bloodBankId\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/doctors",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","doctors"]
+        }
+      }
+    },
+    {
+      "name": "Create Donor",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"donorSsn\": \"DN001\",\n  \"name\": \"Le Thi C\",\n  \"phone\": \"0909123000\",\n  \"age\": 30,\n  \"bloodType\": \"O+\",\n  \"weight\": 55.5,\n  \"lastDonationDate\": \"2025-04-01\",\n  \"healthStatus\": \"Good\",\n  \"isEligible\": true,\n  \"registrationDate\": \"2025-04-23T14:00:00\",\n  \"email\": \"donor1@example.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/donors",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","donors"]
+        }
+      }
+    },
+    {
+      "name": "Create Blood Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"dssn\": \"D001\",\n  \"pssn\": \"P001\",\n  \"bloodType\": \"A+\",\n  \"quantity\": 300,\n  \"status\": \"PENDING\",\n  \"requestDate\": \"2025-04-23\",\n  \"responseDate\": null\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/blood-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","blood-requests"]
+        }
+      }
+    },
+    {
+      "name": "Create Blood Stock",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bloodType\": \"O+\",\n  \"quantity\": 10,\n  \"status\": \"available\",\n  \"expirationDate\": \"2025-05-01\",\n  \"bid\": 1,\n  \"storageLocation\": \"Tủ lạnh 1\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/blood-stocks",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","blood-stocks"]
+        }
+      }
+    },
+    {
+      "name": "Create Blood Bank",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ngân hàng máu Trung Ương\",\n  \"contactEmail\": \"bank@example.com\",\n  \"contactPhone\": \"0123456789\",\n  \"address\": \"123 Đường A, Quận 1\",\n  \"city\": \"Hà Nội\",\n  \"country\": \"Việt Nam\",\n  \"postalCode\": \"10000\",\n  \"lastInventoryDate\": \"2025-04-20\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/blood-banks",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","blood-banks"]
+        }
+      }
+    },
+    {
+      "name": "Create Donation History",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"donationId\": 1,\n  \"donorSsn\": \"DN001\",\n  \"bid\": 1,\n  \"date\": \"2025-04-23T14:00:00\",\n  \"quantity\": 350\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/donation-histories",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api","donation-histories"]
+        }
+      }
+    }
+  ]
+}
