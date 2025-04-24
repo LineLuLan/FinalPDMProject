@@ -1,1 +1,110 @@
-mvn org.apache.maven.plugins:maven-install-plugin:3.1.1:install-file -Dfile="C:\Users\admin\Desktop\PDMPrj\lib\rs2xml.jar" -DgroupId=net.proteanit -DartifactId=rs2xml -Dversion=1.0.3 -Dpackaging=jar
+Users
+json
+CopyInsert
+{
+  "email": "testuser1001@example.com",
+  "password": "123456",
+  "role": "PATIENT"
+}
+POST: /api/users/register
+
+2. Patient
+json
+CopyInsert
+{
+  "pssn": "P1001",
+  "userId": 1,
+  "name": "Nguyen Van A",
+  "bloodType": "A+",
+  "age": 25,
+  "gender": "Male",
+  "phone": "0909123456",
+  "email": "patient1001@example.com",
+  "assignedDoctorId": "D1001"
+}
+POST: /api/patients
+
+3. Doctor
+json
+CopyInsert
+{
+  "dssn": "D1001",
+  "userId": 2,
+  "dname": "Dr. Tran B",
+  "specialization": "Cardiology",
+  "email": "doctor1001@example.com",
+  "bloodBankId": 1
+}
+POST: /api/doctors
+
+4. Donor
+json
+CopyInsert
+{
+  "donorSsn": "DN1001",
+  "name": "Le Thi C",
+  "phone": "0909123000",
+  "age": 30,
+  "bloodType": "O+",
+  "weight": 55.5,
+  "lastDonationDate": "2025-04-01",
+  "healthStatus": "Good",
+  "isEligible": true,
+  "registrationDate": "2025-04-23T14:00:00",
+  "email": "donor1001@example.com"
+}
+POST: /api/donors
+
+5. BloodBank
+json
+CopyInsert
+{
+  "name": "Ngân hàng máu Trung Ương",
+  "contactEmail": "bank1001@example.com",
+  "contactPhone": "0123456789",
+  "address": "123 Đường A, Quận 1",
+  "city": "Hà Nội",
+  "country": "Việt Nam",
+  "postalCode": "10000",
+  "lastInventoryDate": "2025-04-20"
+}
+POST: /api/blood-banks
+
+6. BloodStock
+json
+CopyInsert
+{
+  "bloodType": "O+",
+  "quantity": 10,
+  "status": "available",
+  "expirationDate": "2025-05-01",
+  "bid": 1,
+  "storageLocation": "Tủ lạnh 1"
+}
+POST: /api/blood-stocks
+
+7. BloodRequest
+json
+CopyInsert
+{
+  "dssn": "D1001",
+  "pssn": "P1001",
+  "bloodType": "A+",
+  "quantity": 300,
+  "status": "PENDING",
+  "requestDate": "2025-04-23",
+  "responseDate": null
+}
+POST: /api/blood-requests
+
+8. DonationHistory
+json
+CopyInsert
+{
+  "donationId": 1,
+  "donorSsn": "DN1001",
+  "bid": 1,
+  "date": "2025-04-23T14:00:00",
+  "quantity": 350
+}
+POST: /api/donation-histories
