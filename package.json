@@ -1,0 +1,12 @@
+{
+  "name": "pdm-final-project-main",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm --prefix ./src/frontend run dev\" \"mvn spring-boot:run\"",
+    "dev:front": "npm --prefix ./src/frontend run dev",
+    "dev:back": "mvn spring-boot:run"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

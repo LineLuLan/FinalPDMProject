@@ -11,6 +11,11 @@ import java.util.List;
 public class PatientService {
     private final PatientRepository patientRepository;
 
+    public Patient getPatientByUserId(Integer userId) {
+        return patientRepository.findByUserId(userId)
+            .orElseThrow(() -> new RuntimeException("Patient not found with userId: " + userId));
+    }
+
     @Autowired
     public PatientService(PatientRepository patientRepository) {
         this.patientRepository = patientRepository;

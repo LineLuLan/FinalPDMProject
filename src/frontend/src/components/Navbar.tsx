@@ -6,15 +6,91 @@ import { useSession, signOut } from 'next-auth/react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { data: session } = useSession()
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   const getInitials = (name: string) => {
     return name
       .split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase()
+      .toUpperCase();
+  };
+
+  // Helper to render menu based on role and menu type (mobile/desktop)
+  function renderMenu(mobile: boolean) {
+    const linkClass = mobile ? "block text-gray-700 hover:text-red-400 px-3 py-2" : "text-gray-700 hover:text-red-400 px-3 py-2";
+    const buttonClass = mobile
+      ? "block w-full text-left bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md mx-3 mt-2"
+      : "bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md";
+    const regClass = mobile
+      ? "block hover:bg-red-400 text-gray-800 border hover:border-red-700 hover:text-white px-4 py-2 rounded-md"
+      : "hover:bg-red-400 text-gray-800 border hover:border-red-700 hover:text-white px-4 py-2 rounded-md";
+    const loginClass = mobile
+      ? "block bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md"
+      : "bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md";
+    const onClick = mobile ? () => setIsOpen(false) : undefined;
+    if (!session?.user) {
+      return (
+        <>
+          <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
+          <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
+          <Link href="/find-blood" className={linkClass} onClick={onClick}>Find Blood</Link>
+          <Link href="/register" className={regClass} onClick={onClick}>Register Now</Link>
+          <Link href="/login" className={loginClass} onClick={onClick}>Login</Link>
+        </>
+      );
+    }
+    if (session.user.role === "DOCTOR") {
+      return (
+        <>
+          <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
+          <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
+          <Link href="/doctor/dashboard" className={linkClass + " font-semibold"} onClick={onClick}>Doctor Dashboard</Link>
+          <Link href="/profile" className={mobile ? linkClass : "flex items-center space-x-2 "+linkClass} onClick={onClick}>
+            {!mobile && (
+              <Avatar className="h-8 w-8">
+                <AvatarFallback>{session.user.name ? getInitials(session.user.name) : '?'}</AvatarFallback>
+              </Avatar>
+            )}
+            <span>Profile</span>
+          </Link>
+          <button
+            onClick={() => { signOut(); if(mobile) setIsOpen(false); }}
+            className={buttonClass}
+          >
+            Sign Out
+          </button>
+        </>
+      );
+    }
+    if (session.user.role === "PATIENT") {
+      return (
+        <>
+          <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
+          <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
+          <Link href="/find-blood" className={linkClass} onClick={onClick}>Find Blood</Link>
+          <Link href="/donate-blood" className={linkClass + " font-semibold"} onClick={onClick}>Đăng ký hiến máu</Link>
+          <Link href="/patient/dashboard" className={linkClass + " font-semibold"} onClick={onClick}>Patient Dashboard</Link>
+          <Link href="/patient/blood-requests" className={linkClass} onClick={onClick}>Yêu cầu nhận máu</Link>
+          <Link href="/profile" className={mobile ? linkClass : "flex items-center space-x-2 "+linkClass} onClick={onClick}>
+            {!mobile && (
+              <Avatar className="h-8 w-8">
+                <AvatarFallback>{session.user.name ? getInitials(session.user.name) : '?'}</AvatarFallback>
+              </Avatar>
+            )}
+            <span>Profile</span>
+          </Link>
+          <button
+            onClick={() => { signOut(); if(mobile) setIsOpen(false); }}
+            className={buttonClass}
+          >
+            Sign Out
+          </button>
+        </>
+      );
+    }
+    return null;
   }
 
   return (
@@ -28,42 +104,9 @@ export const Navbar = () => {
           </div>
 
           {/* Desktop menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/" className="text-gray-700 hover:text-red-400 px-3 py-2">
-              Home
-            </Link>
-            <Link href="/about" className="text-gray-700 hover:text-red-400 px-3 py-2">
-              About Us
-            </Link>
-            <Link href="/find-blood" className="text-gray-700 hover:text-red-400 px-3 py-2">
-              Find Blood
-            </Link>
-            {session ? (
-              <>
-                <Link href="/profile" className="flex items-center space-x-2 text-gray-700 hover:text-red-400 px-3 py-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>{getInitials(session.user.name)}</AvatarFallback>
-                  </Avatar>
-                  <span>Profile</span>
-                </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/register" className="hover:bg-red-400 text-gray-800 border hover:border-red-700 hover:text-white px-4 py-2 rounded-md">
-                  Register Now
-                </Link>
-                <Link href="/login" className="bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md">
-                  Login
-                </Link>
-              </>
-            )}
-          </div>
+          <div className="hidden md:flex items-center space-x-4 flex-wrap">
+  {renderMenu(false)}
+</div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
@@ -83,70 +126,13 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile menu */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="pt-2 pb-3 space-y-1">
-              <Link 
-                href="/"
-                className="block text-gray-700 hover:text-red-400 px-3 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="block text-gray-700 hover:text-red-400 px-3 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                About Us
-              </Link>
-              <Link
-                href="/find-blood"
-                className="block text-gray-700 hover:text-red-400 px-3 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                Find Blood
-              </Link>
-              {session ? (
-                <>
-                  <Link
-                    href="/profile"
-                    className="block text-gray-700 hover:text-red-400 px-3 py-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut()
-                      setIsOpen(false)
-                    }}
-                    className="block w-full text-left bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md mx-3 mt-2"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/register"
-                    className="block bg-red-400 text-white hover:bg-darkred-400 px-4 py-2 rounded-md mx-3"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Register Now
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="block bg-white text-red-400 border border-red-400 hover:bg-red-400 hover:text-white px-4 py-2 rounded-md mx-3 mt-2"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Login
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
+{isOpen && (
+  <div className="md:hidden">
+    <div className="pt-2 pb-3 space-y-1">
+      {renderMenu(true)}
+    </div>
+  </div>
+)}
       </div>
     </nav>
   )

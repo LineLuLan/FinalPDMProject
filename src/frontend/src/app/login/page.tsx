@@ -31,7 +31,16 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        router.push("/profile");
+        // Lấy session mới để biết role
+        const sessionRes = await fetch("/api/auth/session");
+        const session = await sessionRes.json();
+        if (session?.user?.role === "DOCTOR") {
+          router.push("/doctor/dashboard");
+        } else if (session?.user?.role === "PATIENT") {
+          router.push("/patient/dashboard");
+        } else {
+          router.push("/profile");
+        }
         router.refresh();
       }
     } catch (error) {
@@ -93,7 +102,8 @@ export default function LoginPage() {
 
           <div className="text-sm text-center">
             <p className="text-gray-600">
-              Test account: user@example.com / password
+              Test DOCTOR: doctor@example.com / password<br />
+              Test PATIENT: patient@example.com / password
             </p>
           </div>
         </form>

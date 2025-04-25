@@ -10,7 +10,7 @@ public interface UsersRepository {
     Optional<Users> findById(Integer userId);
     Optional<Users> findByEmail(String email);
     List<Users> findAll();
-    int save(Users user);
+    Users save(Users user);
     int update(Users user);
     int deleteById(Integer userId);
 }

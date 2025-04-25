@@ -47,7 +47,7 @@ public class DoctorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateDoctor(@PathVariable Integer id, @RequestBody Doctor doctor) {
-
+        doctor.setUserId(id); // Đảm bảo userId luôn đúng với WHERE user_id = ?
         doctorService.updateDoctor(doctor);
         return ResponseEntity.ok("Doctor updated");
     }
@@ -56,5 +56,11 @@ public class DoctorController {
     public ResponseEntity<Void> deleteDoctor(@PathVariable Integer id) {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/dssn/{dssn}")
+    public ResponseEntity<Doctor> getDoctorByDssn(@PathVariable String dssn) {
+        Doctor doctor = doctorService.getDoctorByDssn(dssn);
+        return ResponseEntity.ok(doctor);
     }
 }

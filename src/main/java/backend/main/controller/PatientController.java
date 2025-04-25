@@ -31,6 +31,12 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Patient> getPatientByUserId(@PathVariable Integer userId) {
+        Patient patient = patientService.getPatientByUserId(userId);
+        return ResponseEntity.ok(patient);
+    }
+
     @GetMapping("/{pssn}")
     public ResponseEntity<Patient> getPatientById(@PathVariable String pssn) {
         Patient patient = patientService.getPatientById(pssn);

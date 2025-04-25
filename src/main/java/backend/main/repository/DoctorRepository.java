@@ -7,6 +7,7 @@ import backend.main.model.Doctor;
 
 public interface DoctorRepository {
     Optional<Doctor> findById(Integer doctorId);
+    Optional<Doctor> findByDssn(String dssn);
     List<Doctor> findAll();
     int save(Doctor doctor);
     int update(Doctor doctor);

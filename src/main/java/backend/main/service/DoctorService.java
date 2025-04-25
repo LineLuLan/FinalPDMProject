@@ -21,6 +21,11 @@ public class DoctorService {
                 .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + id));
     }
 
+    public Doctor getDoctorByDssn(String dssn) {
+        return doctorRepository.findByDssn(dssn)
+                .orElseThrow(() -> new RuntimeException("Doctor not found with dssn: " + dssn));
+    }
+
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
     }

@@ -61,14 +61,14 @@ public class DoctorRepositoryImpl implements DoctorRepository {
 
     @Override
     public int update(Doctor doctor) {
-        String sql = "UPDATE Doctor SET dname = ?, specialization = ?, email = ?, blood_bank_id = ? WHERE dssn = ?";
+        String sql = "UPDATE Doctor SET dname = ?, specialization = ?, email = ?, blood_bank_id = ? WHERE user_id = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, doctor.getDname());
             stmt.setString(2, doctor.getSpecialization());
             stmt.setString(3, doctor.getEmail());
             stmt.setInt(4, doctor.getBloodBankId());
-            stmt.setString(5, doctor.getDssn());
+            stmt.setInt(5, doctor.getUserId());
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,11 +107,12 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     }
 
     @Override
-    public Optional<Doctor> findByLicenseNumber(String licenseNumber) {
+    public Optional<Doctor> findByDssn(String dssn) {
+        // Tìm doctor theo dssn (SSN của bác sĩ)
         String sql = "SELECT * FROM Doctor WHERE dssn = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, licenseNumber);
+            stmt.setString(1, dssn);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return Optional.of(mapRowToDoctor(rs));
@@ -121,6 +122,13 @@ public class DoctorRepositoryImpl implements DoctorRepository {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Doctor> findByLicenseNumber(String licenseNumber) {
+        // Giữ lại để implements interface, có thể dùng chung logic với dssn nếu cần
+        return findByDssn(licenseNumber);
+    }
+
 
     @Override
     public Optional<Doctor> findByEmail(String email) {

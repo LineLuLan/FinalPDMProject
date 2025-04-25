@@ -51,6 +51,22 @@ public class PatientRepositoryImpl implements PatientRepository {
     }
 
     @Override
+    public Optional<Patient> findByUserId(Integer userId) {
+        String sql = "SELECT * FROM Patient WHERE user_id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(mapRowToPatient(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Patient> findById(String pssn) {
         String sql = "SELECT * FROM Patient WHERE Pssn = ?";
         try (Connection conn = DatabaseConfig.getConnection();
@@ -85,19 +101,32 @@ public class PatientRepositoryImpl implements PatientRepository {
 
     @Override
     public int save(Patient patient) {
-        String sql = "INSERT INTO Patient (Name, BloodType, Age, Gender) VALUES (?, ?, ?, ?)";
+        // Nếu người dùng nhập pssn, dùng luôn pssn đó để insert
+        boolean hasCustomPssn = patient.getPssn() != null && !patient.getPssn().isEmpty();
+        if (!hasCustomPssn) {
+            // Sinh mã pssn ngẫu nhiên dạng P + timestamp + 3 số random
+            String randSuffix = String.valueOf((int)(Math.random() * 900) + 100);
+            String generatedPssn = "P" + System.currentTimeMillis() + randSuffix;
+            patient.setPssn(generatedPssn);
+        }
+        String sql = "INSERT INTO Patient (pssn, user_id, name, blood_type, age, gender, phone, email, assigned_doctor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, patient.getName());
-            stmt.setString(2, patient.getBloodType());
-            stmt.setInt(3, patient.getAge());
-            stmt.setString(4, patient.getGender());
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int idx = 1;
+            stmt.setString(idx++, patient.getPssn());
+            stmt.setObject(idx++, patient.getUserId());
+            stmt.setString(idx++, patient.getName());
+            stmt.setString(idx++, patient.getBloodType());
+            stmt.setInt(idx++, patient.getAge());
+            stmt.setString(idx++, patient.getGender());
+            stmt.setString(idx++, patient.getPhone());
+            stmt.setString(idx++, patient.getEmail());
+            stmt.setString(idx++, patient.getAssignedDoctorId());
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        patient.setPssn(generatedKeys.getString(1));
-                    }
+                // Đảm bảo luôn có pssn
+                if (patient.getPssn() == null || patient.getPssn().isEmpty()) {
+                    System.err.println("[DEBUG] PSSN is still null/empty after insert!");
                 }
             }
             return affectedRows;

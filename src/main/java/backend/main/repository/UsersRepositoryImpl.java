@@ -80,22 +80,24 @@ public class UsersRepositoryImpl implements UsersRepository {
     }
 
     @Override
-    public int save(Users user) {
+    public Users save(Users user) {
         String sql = "INSERT INTO Users (email, password, role, is_active, created_at) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             setUserParameters(stmt, user);
             int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) return 0;
+            if (affectedRows == 0) throw new SQLException("Creating user failed, no rows affected.");
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 user.setUserId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("Creating user failed, no ID obtained.");
             }
-            return affectedRows;
+            return user;
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return 0;
     }
 
     @Override

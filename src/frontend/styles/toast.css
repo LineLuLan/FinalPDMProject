@@ -1,0 +1,9 @@
+/* Custom styles for react-hot-toast if needed */
+.toaster-success {
+  background: #b91c1c;
+  color: #fff;
+}
+.toaster-error {
+  background: #ef4444;
+  color: #fff;
+}
