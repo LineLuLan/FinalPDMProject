@@ -47,39 +47,40 @@ type UserType = {
 };
 
 export default function ProfilePage() {
-  // State cho các entity
-  // State cho các entity (chỉ khai báo duy nhất ở đây)
-  const { data: session, update } = useSession() as { data: { user: UserType } | null, update: any };
+  // All hooks MUST be at the top, before ANY return!
+  const { data: session, status } = useSession() as { data: { user: UserType } | null, status: string, update: any };
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    password: string;
-  }>({
-    name: session?.user?.name || "",
-    email: session?.user?.email || "",
-    phone: session?.user?.phone || "",
-    address: session?.user?.address || "",
-    password: ""
-  });
-
-  const [role, setRole] = useState<string | null>(null);
-  // Các state cho thông tin doctor, patient, bloodBank v.v.
   const [doctor, setDoctor] = useState<DoctorType | null>(null);
   const [patient, setPatient] = useState<any>(null);
   const [bloodBank, setBloodBank] = useState<any>(null);
   const [patientsOfDoctor, setPatientsOfDoctor] = useState<any[]>([]);
   const [doctorApiError, setDoctorApiError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    age: string;
+    gender: string;
+  }>({
+    name: session?.user?.name || "",
+    email: session?.user?.email || "",
+    phone: session?.user?.phone || "",
+    password: "",
+    age: patient?.age?.toString() || "",
+    gender: patient?.gender || ""
+  });
+  const [role, setRole] = useState<string | null>(null);
 
-  // Debug log for doctor, patientsOfDoctor, bloodBank
-  if (typeof window !== 'undefined') {
-    console.log('doctor:', doctor);
-    console.log('patientsOfDoctor:', patientsOfDoctor);
-    console.log('bloodBank:', bloodBank);
-    if(doctorApiError) console.error('doctorApiError:', doctorApiError);
-  }
+  useEffect(() => {
+    if (patient) {
+      setFormData((prev) => ({
+        ...prev,
+        age: patient.age?.toString() || "",
+        gender: patient.gender || ""
+      }));
+    }
+  }, [patient]);
 
   useEffect(() => {
     // Log session user để kiểm tra userId
@@ -166,7 +167,53 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await update({ ...session, user: { ...session.user, ...formData } });
+    if (role === "PATIENT" && patient && session.user && (session.user.userId || patient.userId)) {
+      const userId = session.user.userId || patient.userId;
+      // User update: always send full user object to avoid null fields
+      let userChanged = false;
+      const userPayload = {
+        userId: session.user.userId,
+        email: formData.email && formData.email !== session.user.email ? formData.email : session.user.email,
+        password: formData.password && formData.password.trim() !== "" ? formData.password : session.user.password,
+        role: session.user.role,
+        isActive: session.user.isActive,
+        createdAt: session.user.createdAt,
+      };
+      if (userPayload.email !== session.user.email || userPayload.password !== session.user.password) {
+        userChanged = true;
+      }
+      if (userChanged) {
+        await axiosInstance.put(`/api/users/${userId}`, userPayload);
+      }
+      // Patient update: always send full object to prevent losing data
+      // Nếu email hoặc password thay đổi, cập nhật cả bên Patient
+      const patientPayload = {
+        pssn: patient.pssn,
+        userId: patient.userId,
+        name: formData.name && formData.name !== patient.name ? formData.name : patient.name,
+        bloodType: patient.bloodType,
+        age: formData.age && formData.age !== patient.age?.toString() ? parseInt(formData.age) : patient.age,
+        gender: formData.gender && formData.gender !== patient.gender ? formData.gender : patient.gender,
+        phone: formData.phone && formData.phone !== patient.phone ? formData.phone : patient.phone,
+        email: formData.email && formData.email !== patient.email ? formData.email : patient.email,
+        password: formData.password && formData.password.trim() !== "" ? formData.password : patient.password,
+        assignedDoctorId: patient.assignedDoctorId,
+      };
+      await axiosInstance.put(`/api/patients/${patient.pssn}`, patientPayload);
+      // Sau khi cập nhật thành công, lấy lại thông tin mới nhất cho patient
+      await fetchPatientInfo(patient.pssn);
+
+      // Update session local if anything changed
+      if (Object.keys(userPayload).length > 0 || Object.keys(patientPayload).length > 0) {
+        await update({ ...session, user: { ...session.user, ...formData, userId } });
+      } else {
+        alert('No changes detected.');
+        return;
+      }
+    } else {
+      alert("Không tìm thấy userId, vui lòng đăng nhập lại!");
+      return;
+    }
     setIsEditing(false);
   };
 
@@ -190,10 +237,9 @@ export default function ProfilePage() {
             <div>
               {role === 'PATIENT' && patient ? (
                 <>
-                  <h1 className="text-2xl font-bold">{patient.name}</h1>
-                  <p className="text-gray-600">{patient.email}</p>
-                  <div className="text-gray-600">{patient.phone}</div>
-                  <div className="text-gray-600">{patient.address}</div>
+                  <h1 className="text-2xl font-bold">{patient.name || ''}</h1>
+                  <div className="text-gray-600">{patient.phone || ''}</div>
+                  <p className="text-gray-600">{patient.email || ''}</p>
                   <span className="text-sm text-blue-500 font-semibold">{role}</span>
                 </>
               ) : (
@@ -218,7 +264,10 @@ export default function ProfilePage() {
               {/* Edit button for doctor */}
               <Button className="mb-4" onClick={() => setIsEditing(true)}>Edit Profile</Button>
               <Dialog open={isEditing} onOpenChange={setIsEditing}>
-                <DialogContent>
+                <DialogContent aria-describedby="profile-edit-description">
+                 <div id="profile-edit-description" style={{ display: 'none' }}>
+                   Edit your profile information. All fields are optional. Only changed fields will be updated.
+                 </div>
                   <DialogHeader>
                     <DialogTitle>Edit Profile</DialogTitle>
                   </DialogHeader>
@@ -343,6 +392,24 @@ export default function ProfilePage() {
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    />
+                  </div>
+                  <div>
                     <Label htmlFor="name">Name</Label>
                     <Input
                       id="name"
@@ -362,15 +429,30 @@ export default function ProfilePage() {
                       }
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) =>
-                        setFormData({ ...formData, address: e.target.value })
-                      }
-                    />
+                  <div className="flex gap-4">
+                    <div className="w-1/2">
+                      <Label htmlFor="age">Age</Label>
+                      <Input
+                        id="age"
+                        type="number"
+                        value={formData.age}
+                        onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <Label htmlFor="gender">Gender</Label>
+                      <select
+                        id="gender"
+                        className="block w-full border rounded px-3 py-2"
+                        value={formData.gender}
+                        onChange={e => setFormData({ ...formData, gender: e.target.value })}
+                      >
+                        <option value="">Select</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
                   </div>
                   <Button type="submit">Save Changes</Button>
                 </form>

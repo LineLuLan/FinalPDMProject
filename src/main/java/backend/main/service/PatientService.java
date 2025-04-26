@@ -45,6 +45,16 @@ public class PatientService {
     }
 
     public Patient updatePatient(String pssn, Patient patient) {
+        Patient current = getPatientById(pssn);
+        // Merge fields: if incoming field is null, keep old value
+        if (patient.getUserId() == null) patient.setUserId(current.getUserId());
+        if (patient.getName() == null) patient.setName(current.getName());
+        if (patient.getBloodType() == null) patient.setBloodType(current.getBloodType());
+        if (patient.getAge() == null) patient.setAge(current.getAge());
+        if (patient.getGender() == null) patient.setGender(current.getGender());
+        if (patient.getPhone() == null) patient.setPhone(current.getPhone());
+        if (patient.getEmail() == null) patient.setEmail(current.getEmail());
+        if (patient.getAssignedDoctorId() == null) patient.setAssignedDoctorId(current.getAssignedDoctorId());
         patient.setPssn(pssn);
         int result = patientRepository.update(patient);
         if (result > 0) {

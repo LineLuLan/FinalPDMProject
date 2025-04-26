@@ -44,6 +44,14 @@ public class UsersService {
     }
 
     public int updateUser(Users user) {
+        Users current = usersRepository.findById(user.getUserId()).orElse(null);
+        if (current == null) return 0;
+        // Merge fields: if incoming field is null, keep old value
+        if (user.getEmail() == null) user.setEmail(current.getEmail());
+        if (user.getPassword() == null) user.setPassword(current.getPassword());
+        if (user.getRole() == null) user.setRole(current.getRole());
+        if (user.getIsActive() == null) user.setIsActive(current.getIsActive());
+        if (user.getCreatedAt() == null) user.setCreatedAt(current.getCreatedAt());
         return usersRepository.update(user);
     }
 

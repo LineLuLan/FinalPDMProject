@@ -69,10 +69,7 @@ export const Navbar = () => {
         <>
           <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
           <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
-          <Link href="/find-blood" className={linkClass} onClick={onClick}>Find Blood</Link>
-          <Link href="/donate-blood" className={linkClass + " font-semibold"} onClick={onClick}>Đăng ký hiến máu</Link>
           <Link href="/patient/dashboard" className={linkClass + " font-semibold"} onClick={onClick}>Patient Dashboard</Link>
-          <Link href="/patient/blood-requests" className={linkClass} onClick={onClick}>Yêu cầu nhận máu</Link>
           <Link href="/profile" className={mobile ? linkClass : "flex items-center space-x-2 "+linkClass} onClick={onClick}>
             {!mobile && (
               <Avatar className="h-8 w-8">

@@ -138,14 +138,29 @@ public class PatientRepositoryImpl implements PatientRepository {
 
     @Override
     public int update(Patient patient) {
-        String sql = "UPDATE Patient SET Name=?, BloodType=?, Age=?, Gender=? WHERE Pssn=?";
+        String sql = "UPDATE Patient SET name=?, blood_type=?, age=?, gender=?, phone=?, email=?, assigned_doctor_id=? WHERE pssn=?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
+            // name
             stmt.setString(1, patient.getName());
+            // blood_type
             stmt.setString(2, patient.getBloodType());
-            stmt.setInt(3, patient.getAge());
+            // age (handle null)
+            if (patient.getAge() != null) {
+                stmt.setInt(3, patient.getAge());
+            } else {
+                stmt.setNull(3, java.sql.Types.INTEGER);
+            }
+            // gender
             stmt.setString(4, patient.getGender());
-            stmt.setString(5, patient.getPssn());
+            // phone
+            stmt.setString(5, patient.getPhone());
+            // email
+            stmt.setString(6, patient.getEmail());
+            // assigned_doctor_id
+            stmt.setString(7, patient.getAssignedDoctorId());
+            // pssn (where)
+            stmt.setString(8, patient.getPssn());
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
