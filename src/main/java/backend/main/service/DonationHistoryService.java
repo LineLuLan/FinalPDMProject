@@ -76,4 +76,8 @@ public class DonationHistoryService {
     public List<DonationHistory> getDonationHistoryByDonorSsn(String donorSsn) {
         return donationHistoryRepository.findByDonorSsn(donorSsn);
     }
+
+    public List<DonationHistory> getDonationHistoryByBid(Integer bid) {
+        return donationHistoryRepository.findByBid(bid);
+    }
 }

@@ -114,6 +114,23 @@ public class DonationHistoryRepositoryImpl implements DonationHistoryRepository 
         return list;
     }
 
+    @Override
+    public List<DonationHistory> findByBid(Integer bid) {
+        List<DonationHistory> list = new ArrayList<>();
+        String sql = "SELECT * FROM DonationHistory WHERE bid = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, bid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                list.add(mapRowToDonationHistory(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     private DonationHistory mapRowToDonationHistory(ResultSet rs) throws SQLException {
         DonationHistory dh = new DonationHistory();
         dh.setDonationId(rs.getInt("donation_id"));

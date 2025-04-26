@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DonorRegistrationForm from "./DonorRegistrationForm";
+import DonorHistoryTable from "./DonorHistoryTable";
 import axios from "axios";
 
 interface ToastProps {
@@ -175,6 +176,8 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
           </tbody>
         </table>
       </div>
+      {/* Bảng lịch sử người hiến máu */}
+      {bid && <DonorHistoryTable bid={bid} />}
     </div>
   );
 };

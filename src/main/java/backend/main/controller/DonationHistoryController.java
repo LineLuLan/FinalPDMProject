@@ -34,6 +34,11 @@ public class DonationHistoryController {
         return ResponseEntity.ok(donationHistoryService.getDonationHistoryByDonorSsn(donorSsn));
     }
 
+    @GetMapping("/blood-bank/{bid}")
+    public ResponseEntity<List<DonationHistory>> getDonationHistoryByBid(@PathVariable Integer bid) {
+        return ResponseEntity.ok(donationHistoryService.getDonationHistoryByBid(bid));
+    }
+
     @PostMapping
     public ResponseEntity<Integer> addDonationHistory(@RequestBody DonationHistory donation) {
         System.out.println("[DEBUG] API /api/donation-history received: donorSsn=" + donation.getDonorSsn() + ", bid=" + donation.getBid() + ", quantity=" + donation.getQuantity());

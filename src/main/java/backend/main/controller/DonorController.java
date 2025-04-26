@@ -28,7 +28,7 @@ public class DonorController {
         this.donorService = donorService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{ssn}")
     public ResponseEntity<Donor> getDonorBySsn(@PathVariable("ssn") String ssn) {
         Donor donor = donorService.getDonorBySsn(ssn);
         return ResponseEntity.ok(donor);

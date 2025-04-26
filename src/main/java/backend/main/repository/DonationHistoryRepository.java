@@ -11,4 +11,5 @@ public interface DonationHistoryRepository {
     int update(DonationHistory donation);
     int deleteById(Integer donationId);
     List<DonationHistory> findByDonorSsn(String donorSsn);
+    List<DonationHistory> findByBid(Integer bid);
 }
