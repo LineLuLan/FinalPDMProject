@@ -159,6 +159,24 @@ public class BloodStockRepositoryImpl implements BloodStockRepository {
     }
 
     @Override
+    public List<BloodStock> findByBloodTypeAndBid(String bloodType, Integer bid) {
+        List<BloodStock> stocks = new ArrayList<>();
+        String sql = "SELECT * FROM BloodStock WHERE bloodType = ? AND bid = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, bloodType);
+            stmt.setInt(2, bid);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                stocks.add(mapRowToBloodStock(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stocks;
+    }
+
+    @Override
     public List<BloodStock> findLowStock(Integer threshold) {
         List<BloodStock> stocks = new ArrayList<>();
         String sql = "SELECT * FROM BloodStock WHERE quantity < ?";

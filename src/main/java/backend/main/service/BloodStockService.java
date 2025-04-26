@@ -41,6 +41,14 @@ public class BloodStockService {
         return bloodStockRepository.findByBloodType(bloodType);
     }
 
+    public List<BloodStock> findByBloodTypeAndBid(String bloodType, Integer bid) {
+        return bloodStockRepository.findByBloodTypeAndBid(bloodType, bid);
+    }
+
+    public int decrementQuantityByBid(Integer bid, Integer quantity) {
+        return bloodStockRepository.decrementQuantityByBid(bid, quantity);
+    }
+
     public List<BloodStock> findLowStock(Integer threshold) {
         return bloodStockRepository.findLowStock(threshold);
     }
