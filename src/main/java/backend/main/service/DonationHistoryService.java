@@ -46,12 +46,19 @@ public class DonationHistoryService {
             if (donor != null) {
                 String bloodType = donor.getBloodType();
                 Integer bid = donation.getBid();
-                java.util.List<backend.main.model.BloodStock> stocks = bloodStockRepository.findByBloodType(bloodType);
-                for (backend.main.model.BloodStock stock : stocks) {
-                    if (stock.getBid() != null && stock.getBid().equals(bid)) {
-                        bloodStockRepository.incrementQuantityByBid(stock.getStockId(), donation.getQuantity());
-                        break;
-                    }
+                Integer quantity = donation.getQuantity();
+                System.out.println("[DEBUG] addDonationHistory: donor_ssn=" + donor.getDonorSsn() + ", bloodType=" + bloodType + ", bid=" + bid + ", quantity=" + quantity);
+                java.util.List<backend.main.model.BloodStock> stocks = bloodStockRepository.findByBloodTypeAndBid(bloodType, bid);
+                System.out.println("[DEBUG] Found " + stocks.size() + " BloodStock(s) for bloodType=" + bloodType + " and bid=" + bid);
+                for (backend.main.model.BloodStock s : stocks) {
+                    System.out.println("[DEBUG] Stock: stockId=" + s.getStockId() + ", bloodType=" + s.getBloodType() + ", bid=" + s.getBid() + ", quantity=" + s.getQuantity());
+                }
+                if (!stocks.isEmpty()) {
+                    backend.main.model.BloodStock stock = stocks.get(0);
+                    System.out.println("[DEBUG] Incrementing stockId=" + stock.getStockId() + " by quantity=" + quantity);
+                    bloodStockRepository.incrementQuantityByStockId(stock.getStockId(), quantity);
+                } else {
+                    System.err.println("[WARNING] No BloodStock found for bloodType=" + bloodType + " and bid=" + bid);
                 }
             }
         }

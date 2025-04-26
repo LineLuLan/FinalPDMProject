@@ -36,6 +36,7 @@ public class DonationHistoryController {
 
     @PostMapping
     public ResponseEntity<Integer> addDonationHistory(@RequestBody DonationHistory donation) {
+        System.out.println("[DEBUG] API /api/donation-history received: donorSsn=" + donation.getDonorSsn() + ", bid=" + donation.getBid() + ", quantity=" + donation.getQuantity());
         int result = donationHistoryService.addDonationHistory(donation);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

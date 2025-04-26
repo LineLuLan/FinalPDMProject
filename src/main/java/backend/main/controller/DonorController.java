@@ -29,8 +29,8 @@ public class DonorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Donor> getDonorById(@PathVariable Integer id) {
-        Donor donor = donorService.getDonorById(id);
+    public ResponseEntity<Donor> getDonorBySsn(@PathVariable("ssn") String ssn) {
+        Donor donor = donorService.getDonorBySsn(ssn);
         return ResponseEntity.ok(donor);
     }
 
@@ -50,14 +50,14 @@ public class DonorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Donor> updateDonor(@PathVariable Integer id, @RequestBody Donor donor) {
-        Donor updatedDonor = donorService.updateDonor(id, donor);
+    public ResponseEntity<Donor> updateDonor(@PathVariable("ssn") String ssn, @RequestBody Donor donor) {
+        Donor updatedDonor = donorService.updateDonor(ssn, donor);
         return ResponseEntity.ok(updatedDonor);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDonor(@PathVariable Integer id) {
-        donorService.deleteDonor(id);
+    public ResponseEntity<Void> deleteDonor(@PathVariable("ssn") String ssn) {
+        donorService.deleteDonor(ssn);
         return ResponseEntity.noContent().build();
     }
 }

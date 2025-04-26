@@ -16,4 +16,7 @@ public interface BloodStockRepository {
     List<BloodStock> findLowStock(Integer threshold);
     int incrementQuantityByBid(Integer bid, Integer quantity);
     int decrementQuantityByBid(Integer bid, Integer quantity);
+    // Add these methods for direct stockId updates
+    int incrementQuantityByStockId(Integer stockId, Integer quantity);
+    int decrementQuantityByStockId(Integer stockId, Integer quantity);
 }

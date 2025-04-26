@@ -16,9 +16,9 @@ public class DonorService {
         this.donorRepository = donorRepository;
     }
 
-    public Donor getDonorById(Integer donorId) {
-        return donorRepository.findById(donorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Donor not found with id: " + donorId));
+    public Donor getDonorBySsn(String donorSsn) {
+        return donorRepository.findById(donorSsn)
+                .orElseThrow(() -> new ResourceNotFoundException("Donor not found with SSN: " + donorSsn));
     }
 
     public List<Donor> getAllDonors() {
@@ -28,33 +28,35 @@ public class DonorService {
     @Transactional
     public Donor addDonor(Donor donor) {
         System.out.println("[DEBUG] addDonor called with: " + donor);
+        // Nếu đã có donor với donor_ssn này thì trả về luôn (không tạo mới)
+        if (donor.getDonorSsn() != null) {
+            var existingBySsn = donorRepository.findById(donor.getDonorSsn());
+            if (existingBySsn.isPresent()) {
+                return existingBySsn.get();
+            }
+        }
         // Tự động set registrationDate nếu chưa có
         if (donor.getRegistrationDate() == null) {
             donor.setRegistrationDate(java.time.LocalDateTime.now());
-        }
-        // Kiểm tra trùng lặp donor theo name, bloodType, age, gender
-        var existing = donorRepository.findByIdentity(donor.getName(), donor.getBloodType(), donor.getAge());
-        if (!existing.isEmpty()) {
-            throw new RuntimeException("Donor already exists with same name, blood type, age, and gender!");
         }
         int result = donorRepository.save(donor);
         if (result > 0 && donor.getDonorSsn() != null) {
             return donor;
         } else {
-            throw new RuntimeException("[ERROR] donorId is still null after save! Possible DB/config error.");
+            throw new RuntimeException("[ERROR] donor_ssn is still null after save! Possible DB/config error.");
         }
     }
 
-    public Donor updateDonor(Integer donorId, Donor donorDetails) {
-        Donor donor = getDonorById(donorId);
+    public Donor updateDonor(String donorSsn, Donor donorDetails) {
+        Donor donor = getDonorBySsn(donorSsn);
         donor.setName(donorDetails.getName());
         // Cập nhật các trường khác tương tự
         donorRepository.update(donor);
         return donor;
     }
 
-    public void deleteDonor(Integer donorId) {
-        Donor donor = getDonorById(donorId);
-        donorRepository.deleteById(donorId);
+    public void deleteDonor(String donorSsn) {
+        Donor donor = getDonorBySsn(donorSsn);
+        donorRepository.deleteById(donorSsn);
     }
 }

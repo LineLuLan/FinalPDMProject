@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import DonorRegistrationForm from "./DonorRegistrationForm";
 import axios from "axios";
 
 interface ToastProps {
@@ -45,6 +46,21 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
   const [bloodRequests, setBloodRequests] = useState<BloodRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [showDonorForm, setShowDonorForm] = useState(false);
+  const [bid, setBid] = useState<number | null>(null);
+
+  // Fetch doctor info to get bid
+  React.useEffect(() => {
+    const fetchDoctor = async () => {
+      try {
+        const res = await axios.get(`/api/doctors/${doctorId}`);
+        setBid(res.data.bloodBankId);
+      } catch (err) {
+        setToast({ message: "Không lấy được thông tin blood bank của bác sĩ!", type: "error" });
+      }
+    };
+    fetchDoctor();
+  }, [doctorId]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -83,6 +99,20 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
     <div className="space-y-8">
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+      <button
+        className="bg-blue-600 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700"
+        onClick={() => setShowDonorForm(true)}
+      >
+        Đăng ký người hiến máu
+      </button>
+      {showDonorForm && bid && (
+        <DonorRegistrationForm
+          open={showDonorForm}
+          onClose={() => setShowDonorForm(false)}
+          onSuccess={() => setToast({ message: "Đăng ký người hiến máu thành công!", type: "success" })}
+          bid={bid}
+        />
       )}
       <div>
         <h2 className="text-xl font-semibold mb-2">Blood Stock Status</h2>

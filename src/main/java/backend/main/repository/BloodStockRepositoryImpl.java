@@ -13,12 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BloodStockRepositoryImpl implements BloodStockRepository {
     @Override
-    public int incrementQuantityByBid(Integer bid, Integer quantity) {
+    public int incrementQuantityByStockId(Integer stockId, Integer quantity) {
         String sql = "UPDATE BloodStock SET quantity = quantity + ? WHERE stockId = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
-            stmt.setInt(2, bid);
+            stmt.setInt(2, stockId);
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -27,16 +27,46 @@ public class BloodStockRepositoryImpl implements BloodStockRepository {
     }
 
     @Override
-    public int decrementQuantityByBid(Integer bid, Integer quantity) {
+    public int decrementQuantityByStockId(Integer stockId, Integer quantity) {
         String sql = "UPDATE BloodStock SET quantity = quantity - ? WHERE stockId = ? AND quantity >= ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, quantity);
-            stmt.setInt(2, bid);
+            stmt.setInt(2, stockId);
             stmt.setInt(3, quantity);
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * Interface method: tăng số lượng máu theo bid (thực tế sẽ tìm stockId phù hợp rồi gọi hàm trên)
+     */
+    @Override
+    public int incrementQuantityByBid(Integer bid, Integer quantity) {
+        // Tìm stockId phù hợp
+        Optional<BloodStock> stock = findById(bid);
+        if (stock.isPresent()) {
+            return incrementQuantityByStockId(stock.get().getStockId(), quantity);
+        } else {
+            System.err.println("[WARNING] Không tìm thấy stockId phù hợp cho bid=" + bid);
+            return 0;
+        }
+    }
+
+    /**
+     * Interface method: giảm số lượng máu theo bid (thực tế sẽ tìm stockId phù hợp rồi gọi hàm trên)
+     */
+    @Override
+    public int decrementQuantityByBid(Integer bid, Integer quantity) {
+        // Tìm stockId phù hợp
+        Optional<BloodStock> stock = findById(bid);
+        if (stock.isPresent()) {
+            return decrementQuantityByStockId(stock.get().getStockId(), quantity);
+        } else {
+            System.err.println("[WARNING] Không tìm thấy stockId phù hợp cho bid=" + bid);
             return 0;
         }
     }

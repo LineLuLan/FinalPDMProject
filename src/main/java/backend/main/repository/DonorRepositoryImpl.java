@@ -19,11 +19,11 @@ import org.springframework.stereotype.Repository;
 public class DonorRepositoryImpl implements DonorRepository {
     
     @Override
-    public Optional<Donor> findById(Integer donorId) {
-        String sql = "SELECT * FROM Donor WHERE donorId = ?";
+    public Optional<Donor> findById(String donorSsn) {
+        String sql = "SELECT * FROM Donor WHERE donor_ssn = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, donorId);
+            stmt.setString(1, donorSsn);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return Optional.of(mapRowToDonor(rs));
@@ -79,11 +79,11 @@ public class DonorRepositoryImpl implements DonorRepository {
     }
 
     @Override
-    public int deleteById(Integer donorId) {
+    public int deleteById(String donorSsn) {
         String sql = "DELETE FROM Donor WHERE donor_ssn = ?";
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, String.valueOf(donorId));
+            stmt.setString(1, donorSsn);
             return stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,15 +186,10 @@ public class DonorRepositoryImpl implements DonorRepository {
         stmt.setInt(4, donor.getAge());
         stmt.setString(5, donor.getBloodType());
         stmt.setDouble(6, donor.getWeight());
-        stmt.setDate(7, donor.getLastDonationDate() != null ? 
-            Date.valueOf(donor.getLastDonationDate()) : null);
+        stmt.setDate(7, donor.getLastDonationDate() != null ? Date.valueOf(donor.getLastDonationDate()) : null);
         stmt.setString(8, donor.getHealthStatus());
         stmt.setBoolean(9, donor.getIsEligible() != null ? donor.getIsEligible() : true);
-        if (donor.getRegistrationDate() != null) {
-            stmt.setTimestamp(10, Timestamp.valueOf(donor.getRegistrationDate()));
-        } else {
-            stmt.setTimestamp(10, new Timestamp(System.currentTimeMillis()));
-        }
+        stmt.setTimestamp(10, donor.getRegistrationDate() != null ? Timestamp.valueOf(donor.getRegistrationDate()) : new Timestamp(System.currentTimeMillis()));
         stmt.setString(11, donor.getDonorSsn());
     }
 }
