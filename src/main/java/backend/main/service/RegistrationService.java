@@ -33,6 +33,8 @@ public class RegistrationService {
         if (user.getCreatedAt() == null) user.setCreatedAt(java.time.LocalDateTime.now());
         Users savedUser = usersRepository.save(user);
 
+        // Gán userId vừa tạo cho patient trước khi lưu
+        patient.setUserId(savedUser.getUserId());
         try {
             // Save patient
             int result = patientRepository.save(patient);

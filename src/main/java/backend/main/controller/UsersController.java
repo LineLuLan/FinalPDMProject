@@ -56,6 +56,10 @@ public class UsersController {
         var userOpt = usersService.getUserByEmail(loginRequest.getEmail());
         if (userOpt.isPresent()) {
             var user = userOpt.get();
+            // Kiểm tra tài khoản đã active chưa
+            if (!Boolean.TRUE.equals(user.getIsActive())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tài khoản đã bị khóa hoặc chưa kích hoạt");
+            }
             // So sánh password (plain text, thực tế nên mã hóa)
             if (user.getPassword().equals(loginRequest.getPassword())) {
                 // Nếu là DOCTOR thì trả về thêm dssn

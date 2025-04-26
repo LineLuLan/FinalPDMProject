@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import useBloodBanks from './useBloodBanks';
 import axios from '@/lib/axios';
 import PssnSuggest from './PssnSuggest';
 
 export default function Register() {
+  const bloodBanks = useBloodBanks();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -109,7 +111,8 @@ export default function Register() {
           assignedDoctorId: formData.assignedDoctorId || undefined
         };
       }
-      const res = await axios.post('/api/registration/registerUser', payload);
+      const endpoint = formData.role === 'PATIENT' ? '/api/registration/registerPatientUser' : '/api/registration/registerUser';
+      const res = await axios.post(endpoint, payload);
       setMessage('Đăng ký thành công! Vui lòng đăng nhập.');
       setFormData({
         fullName: '',
@@ -344,72 +347,26 @@ export default function Register() {
                   </div>
                   <div>
                     <label htmlFor="bloodBankId" className="block text-sm font-medium text-gray-700 mb-2">
-                      Blood Bank ID
+                      Blood Bank
                     </label>
-                    <input
-                      type="number"
+                    <select
                       id="bloodBankId"
                       name="bloodBankId"
                       value={formData.bloodBankId}
                       onChange={handleChange}
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
                       required
-                    />
+                    >
+                      <option value="">Chọn blood bank</option>
+                      {bloodBanks.map((b) => (
+                        <option key={b.bid} value={b.bid}>{b.bid} - {b.name}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </>
             )}
-            {/* Contact Information */}
-            <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h2>
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-                    required
-                  />
-                </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-                    required
-                  />
-                </div>
-                {formData.role === 'DOCTOR' && (
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
-                      required
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
 
             {/* Account Security */}
             <div className="mb-8">
