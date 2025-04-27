@@ -35,7 +35,7 @@ export const Navbar = () => {
         <>
           <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
           <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
-          <Link href="/find-blood" className={linkClass} onClick={onClick}>Find Blood</Link>
+          <Link href="/donate-blood" className={linkClass} onClick={onClick}>Đăng ký hiến máu</Link>
           <Link href="/register" className={regClass} onClick={onClick}>Register Now</Link>
           <Link href="/login" className={loginClass} onClick={onClick}>Login</Link>
         </>

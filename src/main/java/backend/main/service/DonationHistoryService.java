@@ -24,6 +24,10 @@ public class DonationHistoryService {
         return donationHistoryRepository.findAll();
     }
 
+    public java.util.List<java.util.Map<String, Object>> getAllDonationHistoryWithDonorInfo() {
+        return donationHistoryRepository.findAllWithDonorInfo();
+    }
+
     @Autowired
     private backend.main.repository.DonorRepository donorRepository;
     @Autowired

@@ -4,7 +4,7 @@ import backend.main.model.DonationHistory;
 import java.util.List;
 import java.util.Optional;
 
-public interface DonationHistoryRepository {
+public interface DonationHistoryRepository extends DonationHistoryRepositoryCustom {
     Optional<DonationHistory> findById(Integer donationId);
     List<DonationHistory> findAll();
     int save(DonationHistory donation);

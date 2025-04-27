@@ -92,6 +92,7 @@ const DonorRegistrationForm: React.FC<Props> = ({ open, onClose, onSuccess, bid 
     try {
       await axios.post("/api/donation-history", {
         donorSsn: donorSsn,
+        donor_ssn: donorSsn, // gửi cả hai kiểu
         bid: bid,
         quantity: q
       });

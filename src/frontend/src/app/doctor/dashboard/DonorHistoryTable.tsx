@@ -39,29 +39,9 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
     const fetchHistory = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/donation-history/blood-bank/${bid}`);
-        // Group by donorSsn, lấy ngày hiến mới nhất và enrich thông tin donor
-        const groupMap: Record<string, DonorHistory> = {};
-        for (const item of res.data) {
-          if (!groupMap[item.donorSsn] || new Date(item.date) > new Date(groupMap[item.donorSsn].date)) {
-            groupMap[item.donorSsn] = item;
-          }
-        }
-        const enriched = await Promise.all(Object.values(groupMap).map(async (item: DonorHistory) => {
-          try {
-            const donorRes = await axios.get(`/api/donors/${item.donorSsn}`);
-            console.log("Donor info for SSN:", item.donorSsn, donorRes.data);
-            return {
-              ...item,
-              name: donorRes.data.name,
-              bloodType: donorRes.data.bloodType || donorRes.data.blood_type || item.bloodType || '-',
-              lastDonationDate: item.date?.slice(0,10)
-            };
-          } catch {
-            return item;
-          }
-        }));
-        setHistory(enriched);
+        const res = await axios.get(`/api/donation-history/blood-bank/${bid}/with-donor`);
+        setHistory(res.data);
+
       } catch {
         setHistory([]);
       }
@@ -72,12 +52,25 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
 
   const handleShowDetail = async (donorSsn: string) => {
     try {
-      const res = await axios.get(`/api/donors/${donorSsn}`);
-      const donor = res.data;
+      const [donorRes, historyRes] = await Promise.all([
+        axios.get(`/api/donors/${donorSsn}`),
+        axios.get(`/api/donation-history/donor/${donorSsn}`),
+      ]);
+      const donor = donorRes.data;
+      // Lấy ngày hiến gần nhất từ lịch sử hiến máu
+      let lastDonationDate = "-";
+      if (Array.isArray(historyRes.data) && historyRes.data.length > 0) {
+        const maxDate = historyRes.data
+          .map((item: any) => item.date)
+          .filter(Boolean)
+          .sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime())[0];
+        if (maxDate) lastDonationDate = maxDate.slice(0, 10);
+      }
       setSelectedDonor({
         ...donor,
         donorSsn: donor.donorSsn || donor.donor_ssn || '-',
         bloodType: donor.bloodType || donor.blood_type || '-',
+        lastDonationDate,
       });
       setShowDetail(true);
     } catch {
@@ -85,7 +78,6 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
       setShowDetail(false);
     }
   };
-
 
   return (
     <div className="mt-8">
@@ -108,7 +100,7 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
             {history.map((item) => (
               <tr key={item.donationId}>
                 <td className="border px-2 py-1">{item.donorSsn}</td>
-                <td className="border px-2 py-1">{item.name || "-"}</td>
+                <td className="border px-2 py-1">{item.donorName || "-"}</td>
                 <td className="border px-2 py-1">{item.bloodType && item.bloodType !== "" ? item.bloodType : "-"}</td>
                 <td className="border px-2 py-1">{item.quantity}</td>
                 <td className="border px-2 py-1">{item.date?.slice(0, 10)}</td>

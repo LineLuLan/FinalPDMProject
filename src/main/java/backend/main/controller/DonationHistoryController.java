@@ -22,6 +22,11 @@ public class DonationHistoryController {
         return ResponseEntity.ok(donationHistoryService.getAllDonationHistory());
     }
 
+    @GetMapping("/full")
+    public ResponseEntity<java.util.List<java.util.Map<String, Object>>> getAllDonationHistoryWithDonorInfo() {
+        return ResponseEntity.ok(donationHistoryService.getAllDonationHistoryWithDonorInfo());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<DonationHistory> getDonationHistoryById(@PathVariable Integer id) {
         return donationHistoryService.getDonationHistoryById(id)
@@ -37,6 +42,16 @@ public class DonationHistoryController {
     @GetMapping("/blood-bank/{bid}")
     public ResponseEntity<List<DonationHistory>> getDonationHistoryByBid(@PathVariable Integer bid) {
         return ResponseEntity.ok(donationHistoryService.getDonationHistoryByBid(bid));
+    }
+
+    // Endpoint mới: trả về lịch sử hiến máu đã join donor, lọc theo bid (dùng cho dashboard doctor)
+    @GetMapping("/blood-bank/{bid}/with-donor")
+    public ResponseEntity<List<java.util.Map<String, Object>>> getDonationHistoryWithDonorInfoByBid(@PathVariable Integer bid) {
+        List<java.util.Map<String, Object>> all = donationHistoryService.getAllDonationHistoryWithDonorInfo();
+        List<java.util.Map<String, Object>> filtered = all.stream()
+            .filter(row -> row.get("bid") != null && ((Integer) row.get("bid")).equals(bid))
+            .toList();
+        return ResponseEntity.ok(filtered);
     }
 
     @PostMapping
