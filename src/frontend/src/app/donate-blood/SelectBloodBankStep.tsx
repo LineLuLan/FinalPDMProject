@@ -31,33 +31,33 @@ const SelectBloodBankStep: React.FC<SelectBloodBankStepProps> = ({ donorSsn, onS
         bid: Number(selectedBank),
         quantity: Number(quantity)
       });
-      setSuccess("Đăng ký hiến máu thành công!");
+      setSuccess("Blood donation registered successfully!");
       onSuccess();
     } catch (err) {
-      setError("Có lỗi xảy ra khi ghi nhận hiến máu. Vui lòng thử lại!");
+      setError("An error occurred while recording the donation. Please try again!");
     }
     setLoading(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow p-6 mt-6 max-w-xl mx-auto">
-      <h2 className="text-xl font-semibold mb-2">Chọn ngân hàng máu và số lượng muốn hiến</h2>
+      <h2 className="text-xl font-semibold mb-2">Select blood bank and donation amount</h2>
       <div>
-        <label className="block mb-1 font-medium">Ngân hàng máu</label>
+        <label className="block mb-1 font-medium">Blood Bank</label>
         <select
           value={selectedBank}
           onChange={e => setSelectedBank(e.target.value)}
           className="border rounded px-3 py-2 w-full"
           required
         >
-          <option value="">Chọn ngân hàng máu</option>
+          <option value="">Select blood bank</option>
           {bloodBanks.map(bank => (
             <option key={bank.bid} value={bank.bid}>{bank.name}</option>
           ))}
         </select>
       </div>
       <div>
-        <label className="block mb-1 font-medium">Số lượng máu muốn hiến (ml)</label>
+        <label className="block mb-1 font-medium">Amount to donate (ml)</label>
         <input
           type="number"
           min="100"
@@ -70,7 +70,7 @@ const SelectBloodBankStep: React.FC<SelectBloodBankStepProps> = ({ donorSsn, onS
         />
       </div>
       <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded" disabled={loading}>
-        {loading ? "Đang gửi..." : "Xác nhận hiến máu"}
+        {loading ? "Sending..." : "Confirm Donation"}
       </button>
       {success && <div className="text-green-600 mt-2 font-semibold">{success}</div>}
       {error && <div className="text-red-600 mt-2 font-semibold">{error}</div>}

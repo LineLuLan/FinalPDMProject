@@ -45,11 +45,11 @@ export default function PatientDashboard() {
     e.preventDefault();
     setError(null);
     if (!patient?.bloodType) {
-      setError('Không xác định được nhóm máu bệnh nhân!');
+      setError("Cannot determine patient's blood type!");
       return;
     }
     if (!quantity || quantity < 100) {
-      setError('Số lượng phải lớn hơn hoặc bằng 100!');
+      setError('Quantity must be greater than or equal to 100!');
       return;
     }
     setLoading(true);
@@ -64,7 +64,7 @@ export default function PatientDashboard() {
           status: "PENDING",
         })
       });
-      if (!res.ok) throw new Error('Tạo yêu cầu thất bại!');
+      if (!res.ok) throw new Error('Failed to create request!');
       // After successful POST, re-fetch the list from backend for consistency
       const pssn = session.user.pssn;
       const refreshed = await fetch(`/api/blood-requests?pssn=${pssn}`);
@@ -83,7 +83,7 @@ export default function PatientDashboard() {
       {/* --- Form tạo yêu cầu nhận máu --- */}
       <form onSubmit={handleCreateRequest} className="mb-8 flex gap-4 items-end bg-gray-50 p-4 rounded-lg shadow">
         <div>
-          <label className="block mb-1 font-medium">Nhóm máu</label>
+          <label className="block mb-1 font-medium">Blood Type</label>
           <input
             className="border rounded px-3 py-2 w-32 bg-gray-100"
             value={patient?.bloodType || ''}
@@ -91,7 +91,7 @@ export default function PatientDashboard() {
           />
         </div>
         <div>
-          <label className="block mb-1 font-medium">Số lượng (ml)</label>
+          <label className="block mb-1 font-medium">Quantity (ml)</label>
           <input
             type="number"
             className="border rounded px-3 py-2 w-32"
@@ -102,13 +102,13 @@ export default function PatientDashboard() {
           />
         </div>
         <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" disabled={loading}>
-          {loading ? 'Đang gửi...' : 'Gửi yêu cầu'}
+          {loading ? 'Sending...' : 'Send Request'}
         </button>
         {error && <span className="text-red-600 ml-2">{error}</span>}
       </form>
 
       {/* --- Lịch sử yêu cầu nhận máu --- */}
-      <React.Suspense fallback={<div>Đang tải lịch sử...</div>}>
+      <React.Suspense fallback={<div>Loading history...</div>}>
         <BloodRequestTable requests={requests} />
       </React.Suspense>
     </div>

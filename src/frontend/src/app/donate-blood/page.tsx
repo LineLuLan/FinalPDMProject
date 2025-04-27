@@ -56,18 +56,18 @@ export default function DonateBloodPage() {
       // Không reset form ở đây để donorSsn không bị mất trước khi sang bước tiếp theo
       // setForm({ donorSsn: "", fullName: "", email: "", phone: "", age: "", weight: "", bloodType: "", message: "" });
     } catch (err) {
-      setSuccess("Đăng ký thất bại! Vui lòng thử lại.");
+      setSuccess("Registration failed! Please try again.");
     }
     setLoading(false);
   };
 
   return (
     <div className="p-8 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Đăng ký hiến máu</h1>
+      <h1 className="text-2xl font-bold mb-4">Register to Donate Blood</h1>
       {step === "form" && (
         <form onSubmit={handleSubmit} className="space-y-4 bg-white rounded-lg shadow p-6">
           <div>
-            <label className="block mb-1 font-medium">Họ tên</label>
+            <label className="block mb-1 font-medium">Full Name</label>
             <input
               type="text"
               name="fullName"
@@ -78,7 +78,7 @@ export default function DonateBloodPage() {
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Mã số hiến máu / SSN</label>
+            <label className="block mb-1 font-medium">Donor SSN</label>
             <input
               type="text"
               name="donorSsn"
@@ -101,7 +101,7 @@ export default function DonateBloodPage() {
               />
             </div>
             <div className="flex-1">
-              <label className="block mb-1 font-medium">Số điện thoại</label>
+              <label className="block mb-1 font-medium">Phone</label>
               <input
                 type="text"
                 name="phone"
@@ -114,7 +114,7 @@ export default function DonateBloodPage() {
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="block mb-1 font-medium">Tuổi</label>
+              <label className="block mb-1 font-medium">Age</label>
               <input
                 type="number"
                 name="age"
@@ -125,7 +125,7 @@ export default function DonateBloodPage() {
               />
             </div>
             <div className="flex-1">
-              <label className="block mb-1 font-medium">Cân nặng (kg)</label>
+              <label className="block mb-1 font-medium">Weight (kg)</label>
               <input
                 type="number"
                 name="weight"
@@ -137,7 +137,7 @@ export default function DonateBloodPage() {
             </div>
           </div>
           <div>
-            <label className="block mb-1 font-medium">Nhóm máu</label>
+            <label className="block mb-1 font-medium">Blood Type</label>
             <select
               name="bloodType"
               value={form.bloodType}
@@ -145,7 +145,7 @@ export default function DonateBloodPage() {
               className="border rounded px-3 py-2 w-full"
               required
             >
-              <option value="">Chọn nhóm máu</option>
+              <option value="">Select blood type</option>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
               <option value="B+">B+</option>
@@ -157,7 +157,7 @@ export default function DonateBloodPage() {
             </select>
           </div>
           <div>
-            <label className="block mb-1 font-medium">Ghi chú (tùy chọn)</label>
+            <label className="block mb-1 font-medium">Note (optional)</label>
             <textarea
               name="message"
               value={form.message}
@@ -167,7 +167,7 @@ export default function DonateBloodPage() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Đang gửi..." : "Đăng ký"}
+            {loading ? "Sending..." : "Đăng ký"}
           </Button>
           {success && <div className="text-green-600 mt-2 font-semibold">{success}</div>}
         </form>
@@ -176,7 +176,7 @@ export default function DonateBloodPage() {
         <SelectBloodBankStep donorSsn={lastDonorSsn} onSuccess={() => setStep("done")} />
       )}
       {step === "done" && (
-        <div className="text-green-600 mt-4 font-semibold">Cảm ơn bạn đã hoàn thành đăng ký hiến máu!</div>
+        <div className="text-green-600 mt-4 font-semibold">Thank you for completing your blood donation registration!</div>
       )}
     </div>
   );

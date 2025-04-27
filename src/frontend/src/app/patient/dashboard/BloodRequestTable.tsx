@@ -17,20 +17,20 @@ interface Props {
 export default function BloodRequestTable({ requests }: Props) {
   return (
     <div className="mt-8">
-      <h2 className="text-lg font-semibold mb-2">Lịch sử yêu cầu nhận máu</h2>
+      <h2 className="text-lg font-semibold mb-2">Blood Request History</h2>
       <table className="min-w-full bg-white border rounded-lg">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Nhóm máu</th>
-            <th className="py-2 px-4 border-b">Số lượng</th>
-            <th className="py-2 px-4 border-b">Ngày gửi</th>
-            <th className="py-2 px-4 border-b">Trạng thái</th>
-            <th className="py-2 px-4 border-b">Ngày phản hồi</th>
+            <th className="py-2 px-4 border-b">Blood Type</th>
+            <th className="py-2 px-4 border-b">Quantity</th>
+            <th className="py-2 px-4 border-b">Request Date</th>
+            <th className="py-2 px-4 border-b">Status</th>
+            <th className="py-2 px-4 border-b">Response Date</th>
           </tr>
         </thead>
         <tbody>
           {requests.length === 0 ? (
-            <tr><td colSpan={5} className="text-center py-4 text-gray-400">Chưa có yêu cầu nào</td></tr>
+            <tr><td colSpan={5} className="text-center py-4 text-gray-400">No requests yet</td></tr>
           ) : (
             requests.map((req) => {
               // Accept both snake_case and camelCase from backend
@@ -46,9 +46,9 @@ export default function BloodRequestTable({ requests }: Props) {
                   <td className="py-2 px-4 border-b">{quantity}</td>
                   <td className="py-2 px-4 border-b">{requestDate}</td>
                   <td className="py-2 px-4 border-b">
-                    {status === "PENDING" && <span className="text-yellow-600 font-semibold">Đang chờ</span>}
-                    {status === "APPROVED" && <span className="text-green-600 font-semibold">Đã duyệt</span>}
-                    {status === "REJECTED" && <span className="text-red-600 font-semibold">Từ chối</span>}
+                    {status === "PENDING" && <span className="text-yellow-600 font-semibold">Pending</span>}
+                    {status === "APPROVED" && <span className="text-green-600 font-semibold">Approved</span>}
+                    {status === "REJECTED" && <span className="text-red-600 font-semibold">Rejected</span>}
                   </td>
                   <td className="py-2 px-4 border-b">{responseDate || "-"}</td>
                 </tr>

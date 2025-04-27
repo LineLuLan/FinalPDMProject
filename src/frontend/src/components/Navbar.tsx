@@ -35,7 +35,7 @@ export const Navbar = () => {
         <>
           <Link href="/" className={linkClass} onClick={onClick}>Home</Link>
           <Link href="/about" className={linkClass} onClick={onClick}>About Us</Link>
-          <Link href="/donate-blood" className={linkClass} onClick={onClick}>Đăng ký hiến máu</Link>
+          <Link href="/donate-blood" className={linkClass} onClick={onClick}>Register to Donate Blood</Link>
           <Link href="/register" className={regClass} onClick={onClick}>Register Now</Link>
           <Link href="/login" className={loginClass} onClick={onClick}>Login</Link>
         </>
@@ -96,7 +96,7 @@ export const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold text-red-400">
-              Healthcare
+              Blood Donation G3
             </Link>
           </div>
 

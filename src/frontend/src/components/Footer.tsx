@@ -19,7 +19,7 @@ export const Footer = () => {
                   <a href="/about" className="text-gray-600 hover:text-primary">About Us</a>
                 </li>
                 <li>
-                  <a href="/find-blood" className="text-gray-600 hover:text-primary">Find Blood</a>
+                  <a href="/donate-blood" className="text-gray-600 hover:text-primary">Register to Donate Blood</a>
                 </li>
               </ul>
             </div>

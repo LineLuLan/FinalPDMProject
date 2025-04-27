@@ -76,7 +76,7 @@ export default function Register() {
     e.preventDefault();
     setMessage(null);
     if (!formData.role) {
-      setMessage('Vui lòng chọn vai trò tài khoản!');
+      setMessage('Please select an account role!');
       return;
     }
     setLoading(true);
@@ -113,7 +113,7 @@ export default function Register() {
       }
       const endpoint = formData.role === 'PATIENT' ? '/api/registration/registerPatientUser' : '/api/registration/registerUser';
       const res = await axios.post(endpoint, payload);
-      setMessage('Đăng ký thành công! Vui lòng đăng nhập.');
+      setMessage('Registration successful! Please log in.');
       setFormData({
         fullName: '',
         email: '',
@@ -133,7 +133,7 @@ export default function Register() {
       if (err?.response?.data) {
         setMessage(typeof err.response.data === 'string' ? err.response.data : JSON.stringify(err.response.data));
       } else {
-        setMessage('Đăng ký thất bại!');
+        setMessage('Registration failed!');
       }
     } finally {
       setLoading(false);
@@ -146,15 +146,15 @@ export default function Register() {
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Đăng ký tài khoản (Chỉ dành cho Bác sĩ &amp; Bệnh nhân)</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Register Account (For Doctors & Patients only)</h1>
             <p className="text-xl text-gray-600">
-              Chỉ dành cho đối tượng Bác sĩ và Bệnh nhân muốn sử dụng hệ thống quản lý máu. Nếu bạn muốn hiến máu, vui lòng dùng mục "Đăng ký hiến máu" trên thanh menu.
+              For Doctors and Patients who want to use the blood management system only. If you want to donate blood, please use the "Register to Donate Blood" menu item.
             </p>
           </div>
           <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
             <div className="mb-8">
               <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-                Đăng ký tài khoản dưới vai trò
+                Register account as
               </label>
               <select
                 id="role"
@@ -164,14 +164,14 @@ export default function Register() {
                 className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
                 required
               >
-                <option value="">Chọn vai trò</option>
+                <option value="">Select role</option>
                 <option value="PATIENT">Bệnh nhân</option>
                 <option value="DOCTOR">Bác sĩ</option>
               </select>
             </div>
             {formData.role === 'PATIENT' && (
               <>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Thông tin bệnh nhân</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Patient Information</h2>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -207,7 +207,7 @@ export default function Register() {
                   </div>
                   <div>
                     <label htmlFor="dob" className="block text-sm font-medium text-gray-700 mb-2 mt-4">
-                      Ngày sinh
+                      Date of Birth
                     </label>
                     <input
                       type="date"
@@ -221,7 +221,7 @@ export default function Register() {
                   </div>
                   <div>
                     <label htmlFor="age" className="block text-sm font-medium text-gray-700 mb-2 mt-4">
-                      Tuổi
+                      Age
                     </label>
                     <input
                       type="number"
@@ -265,7 +265,7 @@ export default function Register() {
                   </div>
                   <div>
                     <label htmlFor="assignedDoctorId" className="block text-sm font-medium text-gray-700 mb-2 mt-4">
-                      Bác sĩ chỉ định
+                      Referring Doctor
                     </label>
                     <select
                       id="assignedDoctorId"
@@ -274,7 +274,7 @@ export default function Register() {
                       onChange={handleChange}
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
                     >
-                      <option value="">Chọn bác sĩ</option>
+                      <option value="">Select doctor</option>
                       {doctorOptions.map(doc => (
                         <option key={doc.dssn} value={doc.dssn}>
                           {doc.dname} {doc.bloodBankName ? `- ${doc.bloodBankName}` : ''}
@@ -287,7 +287,7 @@ export default function Register() {
             )}
             {formData.role === 'DOCTOR' && (
               <>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Thông tin bác sĩ</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Doctor Information</h2>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label htmlFor="pssn" className="block text-sm font-medium text-gray-700 mb-2">
@@ -357,7 +357,7 @@ export default function Register() {
                       className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
                       required
                     >
-                      <option value="">Chọn blood bank</option>
+                      <option value="">Select blood bank</option>
                       {bloodBanks.map((b) => (
                         <option key={b.bid} value={b.bid}>{b.bid} - {b.name}</option>
                       ))}

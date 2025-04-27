@@ -57,7 +57,7 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
         const res = await axios.get(`/api/doctors/${doctorId}`);
         setBid(res.data.bloodBankId);
       } catch (err) {
-        setToast({ message: "Không lấy được thông tin blood bank của bác sĩ!", type: "error" });
+        setToast({ message: "Failed to get doctor's blood bank information!", type: "error" });
       }
     };
     fetchDoctor();
@@ -73,7 +73,7 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
       setBloodStocks(stocksRes.data);
       setBloodRequests(requestsRes.data);
     } catch (err) {
-      setToast({ message: "Lỗi khi tải dữ liệu!", type: "error" });
+      setToast({ message: "Error loading data!", type: "error" });
     }
     setLoading(false);
   };
@@ -86,10 +86,10 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
   const handleRequestAction = async (requestId: number, action: "accept" | "reject") => {
     try {
       await axios.put(`/api/blood-requests/${requestId}/${action}`);
-      setToast({ message: action === "accept" ? "Đã chấp nhận yêu cầu máu." : "Đã từ chối yêu cầu máu.", type: "success" });
+      setToast({ message: action === "accept" ? "Blood request accepted." : "Blood request rejected.", type: "success" });
       fetchData(); // Refetch to update status
     } catch (err) {
-      setToast({ message: "Có lỗi xảy ra khi cập nhật yêu cầu!", type: "error" });
+      setToast({ message: "An error occurred while updating the request!", type: "error" });
     }
   };
 
@@ -105,13 +105,13 @@ const DoctorDashboardTable: React.FC<DoctorDashboardTableProps> = ({ doctorId, d
         className="bg-blue-600 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700"
         onClick={() => setShowDonorForm(true)}
       >
-        Đăng ký người hiến máu
+        Register Donor
       </button>
       {showDonorForm && bid && (
         <DonorRegistrationForm
           open={showDonorForm}
           onClose={() => setShowDonorForm(false)}
-          onSuccess={() => setToast({ message: "Đăng ký người hiến máu thành công!", type: "success" })}
+          onSuccess={() => setToast({ message: "Register Donor thành công!", type: "success" })}
           bid={bid}
         />
       )}

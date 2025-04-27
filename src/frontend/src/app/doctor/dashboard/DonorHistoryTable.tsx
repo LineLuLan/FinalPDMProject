@@ -57,7 +57,7 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
         axios.get(`/api/donation-history/donor/${donorSsn}`),
       ]);
       const donor = donorRes.data;
-      // Lấy ngày hiến gần nhất từ lịch sử hiến máu
+      // Get the latest donation date from donation history
       let lastDonationDate = "-";
       if (Array.isArray(historyRes.data) && historyRes.data.length > 0) {
         const maxDate = historyRes.data
@@ -81,19 +81,19 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-2">Lịch sử người hiến máu</h2>
+      <h2 className="text-xl font-semibold mb-2">Donation History</h2>
       {loading ? (
-        <div>Đang tải dữ liệu...</div>
+        <div>Loading data...</div>
       ) : (
         <table className="min-w-full border">
           <thead>
             <tr>
-              <th className="border px-2 py-1">SSN</th>
-              <th className="border px-2 py-1">Tên</th>
-              <th className="border px-2 py-1">Nhóm máu</th>
+              <th className="border px-2 py-1">Donor SSN</th>
+              <th className="border px-2 py-1">Donor Name</th>
+              <th className="border px-2 py-1">Blood Type</th>
               <th className="border px-2 py-1">Quantity</th>
-              <th className="border px-2 py-1">Ngày hiến</th>
-              <th className="border px-2 py-1">Chi tiết</th>
+              <th className="border px-2 py-1">Donation Date</th>
+              <th className="border px-2 py-1">Details</th>
             </tr>
           </thead>
           <tbody>
@@ -109,7 +109,7 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
                     className="bg-blue-500 text-white px-2 py-1 rounded"
                     onClick={() => handleShowDetail(item.donorSsn)}
                   >
-                    Xem chi tiết
+                    View Details
                   </button>
                 </td>
               </tr>
@@ -121,17 +121,17 @@ const DonorHistoryTable: React.FC<DonorHistoryTableProps> = ({ bid }) => {
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-lg min-w-[320px] relative">
             <button className="absolute top-2 right-2 text-xl" onClick={() => setShowDetail(false)}>&times;</button>
-            <h3 className="text-lg font-bold mb-2">Thông tin chi tiết người hiến</h3>
+            <h3 className="text-lg font-bold mb-2">Donor Details</h3>
             <div><b>SSN:</b> {selectedDonor.donorSsn || '-'}</div>
-            <div><b>Tên:</b> {selectedDonor.name || '-'}</div>
-            <div><b>Nhóm máu:</b> {selectedDonor.bloodType || selectedDonor.blood_type || '-'}</div>
-            <div><b>SĐT:</b> {selectedDonor.phone}</div>
-            <div><b>Tuổi:</b> {selectedDonor.age}</div>
-            <div><b>Cân nặng:</b> {selectedDonor.weight}</div>
-            <div><b>Ngày hiến gần nhất:</b> {selectedDonor.lastDonationDate || '-'}</div>
-            <div><b>Tình trạng sức khỏe:</b> {selectedDonor.healthStatus}</div>
+            <div><b>Name:</b> {selectedDonor.name || '-'}</div>
+            <div><b>Blood Type:</b> {selectedDonor.bloodType || selectedDonor.blood_type || '-'}</div>
+            <div><b>Phone:</b> {selectedDonor.phone}</div>
+            <div><b>Age:</b> {selectedDonor.age}</div>
+            <div><b>Weight:</b> {selectedDonor.weight}</div>
+            <div><b>Latest Donation Date:</b> {selectedDonor.lastDonationDate || '-'}</div>
+            <div><b>Health Status:</b> {selectedDonor.healthStatus}</div>
             <div><b>Email:</b> {selectedDonor.email}</div>
-            <div><b>Ngày đăng ký:</b> {selectedDonor.registrationDate?.slice(0, 10)}</div>
+            <div><b>Registration Date:</b> {selectedDonor.registrationDate?.slice(0, 10)}</div>
           </div>
         </div>
       )}

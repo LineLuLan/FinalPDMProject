@@ -14,7 +14,7 @@ const PssnSuggest: React.FC<Props> = ({ fullName, dob, value, onChange }) => {
   const [isDuplicate, setIsDuplicate] = useState(false);
 
   useEffect(() => {
-    // Gợi ý mã PSSN khi có tên và ngày sinh
+    // Suggest PSSN code when name and date of birth are provided
     if (fullName && dob) {
       const namePart = fullName.trim().split(' ').pop()?.slice(0, 3).toUpperCase() || 'XXX';
       const year = new Date(dob).getFullYear();
@@ -23,7 +23,7 @@ const PssnSuggest: React.FC<Props> = ({ fullName, dob, value, onChange }) => {
   }, [fullName, dob]);
 
   useEffect(() => {
-    // Kiểm tra trùng mã PSSN khi người dùng nhập
+    // Check for duplicate PSSN code when user enters
     if (value) {
       setChecking(true);
       axios.get(`/api/patients/check-pssn?pssn=${value}`)
@@ -38,7 +38,7 @@ const PssnSuggest: React.FC<Props> = ({ fullName, dob, value, onChange }) => {
   return (
     <div>
       <label htmlFor="pssn" className="block text-sm font-medium text-gray-700 mb-1">
-        Mã bệnh nhân (PSSN):
+        Patient code (PSSN):
       </label>
       <div className="flex gap-2 items-center">
         <input
@@ -57,12 +57,12 @@ const PssnSuggest: React.FC<Props> = ({ fullName, dob, value, onChange }) => {
             onClick={() => onChange(suggested)}
             tabIndex={-1}
           >
-            Dùng gợi ý: {suggested}
+            Use suggestion: {suggested}
           </button>
         )}
       </div>
-      {checking && <div className="text-xs text-gray-500 mt-1">Đang kiểm tra trùng mã...</div>}
-      {isDuplicate && <div className="text-xs text-red-500 mt-1">Mã PSSN đã tồn tại, hãy chọn mã khác!</div>}
+      {checking && <div className="text-xs text-gray-500 mt-1">Checking for duplicate code...</div>}
+      {isDuplicate && <div className="text-xs text-red-500 mt-1">PSSN code already exists, please choose another!</div>}
     </div>
   );
 };
