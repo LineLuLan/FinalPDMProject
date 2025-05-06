@@ -94,14 +94,14 @@ export default function ProfilePage() {
     if (userRole === 'DOCTOR') {
       const dssn = session.user?.dssn;
       if (!dssn) {
-        setDoctorApiError("Không tìm thấy dssn trong session!");
+        setDoctorApiError("No dssn found in session!");
         return;
       }
       fetchDoctorInfo(dssn);
     } else if (userRole === 'PATIENT') {
       const pssn = session.user?.pssn;
       if (!pssn) {
-        console.error('Không tìm thấy pssn trong session!');
+        console.error('No pssn found in session!');
         return;
       }
       fetchPatientInfo(pssn);
@@ -211,7 +211,7 @@ export default function ProfilePage() {
         return;
       }
     } else {
-      alert("Không tìm thấy userId, vui lòng đăng nhập lại!");
+      alert("UserId not found, please login again!");
       return;
     }
     setIsEditing(false);
@@ -254,10 +254,10 @@ export default function ProfilePage() {
 
           {/* Doctor-specific info block */}
           {role === "DOCTOR" && doctorApiError && (
-            <div className="text-red-600 font-bold mb-4">Lỗi lấy thông tin doctor: {doctorApiError}</div>
+            <div className="text-red-600 font-bold mb-4">Error getting doctor information: {doctorApiError}</div>
           )}
           {role === "DOCTOR" && !doctor && !doctorApiError && (
-            <div className="text-red-600 font-bold mb-4">Không tìm thấy thông tin doctor hoặc chưa load xong!</div>
+            <div className="text-red-600 font-bold mb-4">Doctor information not found or not loaded yet!</div>
           )}
           {role === "DOCTOR" && doctor && (
             <div className="space-y-2 mb-4">
@@ -289,7 +289,7 @@ export default function ProfilePage() {
                       // Prepare user update object
                       const userId = (doctor?.userId ?? session?.user?.userId);
                       if (!userId || typeof userId !== 'number') {
-                        alert('Không tìm thấy userId hợp lệ để cập nhật user!');
+                        alert('No valid userId found to update user!');
                         return;
                       }
                       const userUpdate: any = {
@@ -302,7 +302,7 @@ export default function ProfilePage() {
                       if (formData.password && formData.password.trim() !== "") {
                         userUpdate.password = formData.password;
                       }
-                      console.log('userUpdate gửi lên:', userUpdate);
+                      console.log('userUpdate sent:', userUpdate);
                       await axiosInstance.put(`/api/users/${userId}`, userUpdate);
                       // Reload doctor info
                       fetchDoctorInfo(doctor.dssn);

@@ -27,7 +27,7 @@ public class RegistrationService {
     public Patient registerPatientAndUser(Users user, Patient patient) {
         // Save user first
         if (usersRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+            throw new RuntimeException("Email had existed!");
         }
         if (user.getIsActive() == null) user.setIsActive(true);
         if (user.getCreatedAt() == null) user.setCreatedAt(java.time.LocalDateTime.now());
@@ -54,11 +54,11 @@ public class RegistrationService {
     public Doctor registerDoctorAndUser(Users user, Doctor doctor) {
         // Save user first
         if (usersRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email đã tồn tại!");
+            throw new RuntimeException("Email had existed!");
         }
         // Kiểm tra dssn duy nhất nếu có
         if (doctor.getDssn() != null && doctorRepository.findByLicenseNumber(doctor.getDssn()).isPresent()) {
-            throw new RuntimeException("DSSN đã tồn tại!");
+            throw new RuntimeException("DSSN had existed!");
         }
         if (user.getIsActive() == null) user.setIsActive(true);
         if (user.getCreatedAt() == null) user.setCreatedAt(java.time.LocalDateTime.now());

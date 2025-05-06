@@ -60,17 +60,17 @@ export default function PatientBloodRequestsPage() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Yêu cầu nhận máu</h1>
+      <h1 className="text-2xl font-bold mb-4">Blood requirement</h1>
       <form onSubmit={handleRequest} className="mb-8 flex gap-4 items-end">
         <div>
-          <label className="block mb-1 font-medium">Nhóm máu cần nhận</label>
+          <label className="block mb-1 font-medium">Blood type required</label>
           <select
             className="border rounded px-3 py-2 w-40"
             value={bloodType}
             onChange={e => setBloodType(e.target.value)}
             required
           >
-            <option value="">Chọn nhóm máu</option>
+            <option value="">Select blood type</option>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
             <option value="B+">B+</option>
@@ -85,13 +85,13 @@ export default function PatientBloodRequestsPage() {
           {loading ? "Đang gửi..." : "Gửi yêu cầu"}
         </Button>
       </form>
-      <h2 className="text-lg font-semibold mb-2">Lịch sử yêu cầu nhận máu</h2>
+      <h2 className="text-lg font-semibold mb-2">Blood request history</h2>
       <table className="min-w-full bg-white border rounded-lg">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Nhóm máu</th>
-            <th className="py-2 px-4 border-b">Trạng thái</th>
-            <th className="py-2 px-4 border-b">Ngày yêu cầu</th>
+            <th className="py-2 px-4 border-b">Blood type</th>
+            <th className="py-2 px-4 border-b">Status</th>
+            <th className="py-2 px-4 border-b">Date request</th>
           </tr>
         </thead>
         <tbody>

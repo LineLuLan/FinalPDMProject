@@ -34,7 +34,7 @@ public class PatientService {
         // Kiểm tra trùng hoàn toàn: tất cả các trường identity
         List<Patient> candidates = patientRepository.findByIdentity(patient.getName(), patient.getBloodType(), patient.getAge(), patient.getGender());
         if (!candidates.isEmpty()) {
-            throw new RuntimeException("Bệnh nhân đã tồn tại với thông tin này!");
+            throw new RuntimeException("Exist Patient with this information!");
         }
         int result = patientRepository.save(patient);
         if (result > 0 && patient.getPssn() != null) {

@@ -30,7 +30,7 @@ public class UsersService {
     public Object addUser(Users user) {
         // Kiểm tra email đã tồn tại
         if (usersRepository.existsByEmail(user.getEmail())) {
-            return "Email đã tồn tại!";
+            return "Email had existed!";
         }
         // Đảm bảo isActive luôn true nếu null
         if (user.getIsActive() == null) {

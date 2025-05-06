@@ -102,8 +102,8 @@ export default function LoginPage() {
 
           <div className="text-sm text-center">
             <p className="text-gray-600">
-              Test DOCTOR: doctor@example.com / password<br />
-              Test PATIENT: patient@example.com / password
+              Login with patient or doctor emailemail<br />
+              Be a hero: Donate blood now!
             </p>
           </div>
         </form>

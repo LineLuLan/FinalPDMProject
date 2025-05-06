@@ -37,13 +37,13 @@ export default function DonationHistoryPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Lịch sử hiến máu của bạn</h1>
+      <h1 className="text-2xl font-bold mb-4">Your blood donation history</h1>
       <table className="min-w-full bg-white border rounded-lg">
         <thead>
           <tr>
-            <th className="py-2 px-4 border-b">Ngày hiến</th>
-            <th className="py-2 px-4 border-b">Thể tích</th>
-            <th className="py-2 px-4 border-b">Địa điểm</th>
+            <th className="py-2 px-4 border-b">Date donation</th>
+            <th className="py-2 px-4 border-b">Quantity</th>
+            <th className="py-2 px-4 border-b">Blood bank</th>
           </tr>
         </thead>
         <tbody>

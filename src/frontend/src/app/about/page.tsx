@@ -54,17 +54,17 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              name: 'Dr. Sarah Johnson',
+              name: 'Dr. Izumi Line',
               role: 'Medical Director',
               image: '👩‍⚕️',
             },
             {
-              name: 'Michael Chen',
+              name: 'Michael Anh',
               role: 'Technical Lead',
               image: '👨‍💻',
             },
             {
-              name: 'Emma Williams',
+              name: 'Mr. Tran',
               role: 'Community Manager',
               image: '👩‍💼',
             },

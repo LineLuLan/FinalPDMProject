@@ -34,13 +34,13 @@ public class DoctorService {
         // Kiểm tra trùng specialization
         if (doctor.getSpecialization() != null && !doctor.getSpecialization().trim().isEmpty()) {
             if (!doctorRepository.findBySpecialization(doctor.getSpecialization()).isEmpty()) {
-                throw new RuntimeException("Đã tồn tại bác sĩ với specialization này!");
+                throw new RuntimeException("Exist doctor with this specialization!");
             }
         }
         // Kiểm tra trùng email
         if (doctor.getEmail() != null && !doctor.getEmail().trim().isEmpty()) {
             if (!doctorRepository.findByEmail(doctor.getEmail()).isEmpty()) {
-                throw new RuntimeException("Đã tồn tại bác sĩ với email này!");
+                throw new RuntimeException("Exist doctor with this email!");
             }
         }
         return doctorRepository.save(doctor);

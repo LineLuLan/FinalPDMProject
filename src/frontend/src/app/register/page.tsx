@@ -165,8 +165,8 @@ export default function Register() {
                 required
               >
                 <option value="">Select role</option>
-                <option value="PATIENT">Bệnh nhân</option>
-                <option value="DOCTOR">Bác sĩ</option>
+                <option value="PATIENT">Patient</option>
+                <option value="DOCTOR">Doctor</option>
               </select>
             </div>
             {formData.role === 'PATIENT' && (
@@ -405,7 +405,7 @@ export default function Register() {
               </a>
             </p>
             {message && (
-              <div className={`mt-4 text-center font-semibold ${message.includes('thành công') ? 'text-green-600' : 'text-red-600'}`}>{message}</div>
+              <div className={`mt-4 text-center font-semibold ${message.includes('Successful') ? 'text-green-600' : 'text-red-600'}`}>{message}</div>
             )}
           </form>
         </div>

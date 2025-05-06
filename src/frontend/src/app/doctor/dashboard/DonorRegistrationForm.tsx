@@ -42,7 +42,7 @@ const DonorRegistrationForm: React.FC<Props> = ({ open, onClose, onSuccess, bid 
       return "Please fill in all required fields.";
     }
     const age = Number(form.age);
-    if (isNaN(age) || age < 18 || age > 65) return "Age hợp lệ là 18-65.";
+    if (isNaN(age) || age < 18 || age > 65) return "Age valid is 18-65.";
     const weight = Number(form.weight);
     if (isNaN(weight) || weight < 50) return "Weight must be over 50kg.";
     return null;
@@ -105,7 +105,7 @@ const DonorRegistrationForm: React.FC<Props> = ({ open, onClose, onSuccess, bid 
     } catch (err: any) {
       let msg = err?.response?.data;
       if (typeof msg === "object" && msg !== null) msg = msg.message || JSON.stringify(msg);
-      setQuantityError(msg || "Save lịch sử hiến máu thất bại!");
+      setQuantityError(msg || "Failed saving historyhistory!");
     } finally {
       setLoading(false);
     }
@@ -123,9 +123,9 @@ const DonorRegistrationForm: React.FC<Props> = ({ open, onClose, onSuccess, bid 
             <input name="name" value={form.name} onChange={handleChange} placeholder="Donor Name" className="w-full border p-2 rounded" required />
             <select name="gender" value={form.gender} onChange={handleChange} className="w-full border p-2 rounded" required>
               <option value="">Gender</option>
-              <option value="Male">Nam</option>
-              <option value="Female">Nữ</option>
-              <option value="Other">Khác</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
             <input name="age" value={form.age} onChange={handleChange} placeholder="Age" type="number" className="w-full border p-2 rounded" required min={18} max={65}/>
             <select name="blood_type" value={form.blood_type} onChange={handleChange} className="w-full border p-2 rounded" required>

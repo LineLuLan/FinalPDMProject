@@ -43,7 +43,7 @@ public class DonorController {
     @PostMapping
     public ResponseEntity<Donor> addDonor(@RequestBody Donor donor) {
         if (donor.getPhone() == null || donor.getPhone().trim().isEmpty()) {
-            throw new RuntimeException("Số điện thoại không được để trống!");
+            throw new RuntimeException("Phone number have not to put empty");
         }
         Donor savedDonor = donorService.addDonor(donor);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDonor);
