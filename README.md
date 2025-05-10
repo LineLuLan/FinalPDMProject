@@ -32,9 +32,7 @@ spring.datasource.password=YOUR_PASSWORD
 ```
 
 ### Tạo Database & Dữ liệu mẫu
-- Chạy file SQL sau trên SQL Server:
-  - `src/main/resources/database.sql` (tạo bảng)
-  - `src/main/resources/sample_data.sql` (dữ liệu mẫu)
+Khởi chạy MySQL và script database và data
 
 ### Chạy backend
 ```bash
