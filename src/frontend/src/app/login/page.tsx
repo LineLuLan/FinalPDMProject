@@ -102,7 +102,7 @@ export default function LoginPage() {
 
           <div className="text-sm text-center">
             <p className="text-gray-600">
-              Login with patient or doctor emailemail<br />
+              Login with patient or doctor email<br />
               Be a hero: Donate blood now!
             </p>
           </div>

@@ -79,6 +79,10 @@ export default function Register() {
       setMessage('Please select an account role!');
       return;
     }
+    if (formData.role === 'PATIENT' && calculateAge(formData.dob) < 18) {
+      setMessage('Patient must be at least 18 years old');
+      return;
+    }
     setLoading(true);
     try {
       let payload: any = {
@@ -262,6 +266,20 @@ export default function Register() {
                       <option value="AB+">AB+</option>
                       <option value="AB-">AB-</option>
                     </select>
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2 mt-4">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
+                      required
+                    />
                   </div>
                   <div>
                     <label htmlFor="assignedDoctorId" className="block text-sm font-medium text-gray-700 mb-2 mt-4">
